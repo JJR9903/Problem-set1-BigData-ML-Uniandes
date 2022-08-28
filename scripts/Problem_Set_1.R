@@ -45,8 +45,8 @@ save(GEIH_2018, file = "stores/GEIH_2018.RData")
 write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 
 
-
-
+#load GEIH_2018
+load("stores/GEIH_2018.RData")
 
 
 ##Filtrar por mayores de edad
