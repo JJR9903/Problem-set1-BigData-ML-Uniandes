@@ -9,25 +9,26 @@
 
 rm(list=ls())
 
+# este setwd por ahora no esta funcionando, toca que cada uno lo haga independiente mientras logro que funcione. att: Juan Jose
 dir_set <- function(){
   if("/Users/JuanJose"%in%getwd()){
-    setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1")
+    setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1/GitHub")
   }
-  else if("\Users\PC-portatil"%in%getwd()){
+  else if("/Users/PC-portatil"%in%getwd()){
   setwd("")
   }
   else{
-  setwd("C:\Users\Usuario\Documents\GitHub\Problem Set 1")
+  setwd("C:/Users/Usuario/Documents/GitHub/Problem Set 1")
   }
-
 }
 
 dir_set()
 
-##### 1. Web Scraping data set (GEIH 2018 - Bogotá)
 
 pacman:: p_load(rvest, tidyverse, skimr, stargazer)
 
+
+##### 1. Web Scraping data set (GEIH 2018 - Bogotá)
 problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
 
 GEIH_2018<- data.frame()
@@ -39,7 +40,15 @@ for (url in problem_set_URL){
   
 }
 
-GEIH_2018
+# save data in RData and csv files
+save(GEIH_2018, file = "stores/GEIH_2018.RData")
+write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
+
+
+
+
+
+
 ##Filtrar por mayores de edad
 names(GEIH_2018)
 
