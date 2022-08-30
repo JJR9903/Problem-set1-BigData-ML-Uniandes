@@ -27,7 +27,7 @@ dir_set <- function(){
 dir_set()
 
 
-pacman:: p_load(rvest, tidyverse, skimr, stargazer)
+pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot)
 
 
 ##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
@@ -69,9 +69,47 @@ names(GEIH_2018)
 GEIH_2018<-GEIH_2018%>%
   filter(GEIH_2018$age>18)
 
+
+skim(GEIH_2018)
+
+par(mfrow=c(2,2))
+hist(GEIH_2018$age, main="Age of surveyed people distribution", col= '#28BFE8',xlab = "Age")
+hist(GEIH_2018$sex, main="Distribución de la edad de los encuestados",col= '#28BFE8',xlab = "sexo")
+hist(GEIH_2018$clase, main="Distribución de la edad de los encuestados",col= '#28BFE8',xlab = "Zona")
+hist(GEIH_2018$age, main="Distribución de la edad de los encuestados")+  
+  theme_minimal()
+
+
+age <- ggplot(GEIH_2018, aes(age)) +
+  geom_histogram(fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(age),color="Mean"), size=1)+
+  geom_vline(aes(xintercept=mean(age)+sd(age),color="sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(age)-sd(age),color="sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "age", values = c(Mean = "blue", sd = "red"))+
+  theme_minimal()
+
+estrato <- ggplot(GEIH_2018, aes(estrato1)) +
+  geom_histogram(fill = "#28BFE8", color = "white",binwidth=1) + 
+  geom_vline(aes(xintercept=mean(estrato1),color="Mean"), size=1)+
+  geom_vline(aes(xintercept=mean(estrato1)+sd(estrato1),color="sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(estrato1)-sd(estrato1),color="sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Estrato", values = c(Mean = "blue", sd = "red"))+
+  theme_minimal()
+
+
+plot_grid(age, estrato,labels = c("Age", "Estrato"), ncol = 2, nrow = 1)
+
+table(GEIH_2018$estrato1)
+
+#verificar las variables dicotomas
+range(GEIH_2018$clase)
+range(GEIH_2018$sex)
+
+
 #Seleccionar variable de Ingreso
 
 GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
+
 
 
 

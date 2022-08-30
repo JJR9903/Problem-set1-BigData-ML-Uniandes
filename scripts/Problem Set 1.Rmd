@@ -50,17 +50,14 @@ for (url in problem_set_URL){
   df <- as.data.frame(read_html(url)%>%
                         html_table())
   GEIH_2018<-rbind(GEIH_2018,df)
-  
 }
-
 # save data in RData and csv files
 save(GEIH_2018, file = "stores/GEIH_2018.RData")
 write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
+```
 
-
-# load data without WS
+```{load data without WS, include=FALSE}
 load("stores/GEIH_2018.RData")
-
 ```
 
 #### Loading data (Web Scraping)
@@ -74,4 +71,14 @@ In synthesis, the whole data set has 32,177 observations, one for each household
 The survey has 178 variables that ask about multiple topics, the ones of our interest are age, sex, education, type of social security system, employment, professional area of their work, different types of income (labor, rent, retirement pension, etc.). However, there are many of these variables that are question sets that are only answered by a sub population filtered by a broader question. For example, the variable P6580 refers to the question "¿el mes pasado recibió bonificaciones?", therefore, variables p6580s1 and p6580s1, are sub questions of the latter, "¿cuánto recibió por bonificaciones?" and "¿incluyó este valor en los ingresos del mes pasado ($ ____) que me declaró?". 
 
 In conclusion, this data set bring with it a lot of doubts on which variables are the most reliable to the analysis, not because the veracity of the information (which we don't doubt), but because the completeness, and absence of missing values. Hence, we have to choose the appropriately the variables that we want to use in terms of their economic interpretation and their completeness. Consequently, after narrowing down the data set, we need to make a better description of the variables, to choose the propper ones. 
+
+#### Data Cleaning and Description
+```{r Data Cleaning, echo=FALSE, warning=FALSE}
+
+GEIH_2018<-GEIH_2018%>%
+  filter(GEIH_2018$age>18)
+
+skim(GEIH_2018)
+
+```
 
