@@ -1,0 +1,77 @@
+---
+title: "Problem Set 1"
+author: "Juan José Rincón, Juanita Chacón , Andrés Opina"
+date: "`r Sys.Date()`"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include = FALSE)
+rm(list=ls())
+
+
+
+# este setwd por ahora no esta funcionando, toca que cada uno lo haga independiente mientras logro que funcione. att: Juan Jose
+dir_set <- function(){
+  if(Sys.info()["user"]=="JuanJose"){
+    setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1/GitHub")
+  }
+  else if("/Users/PC-portatil"%in%getwd()){
+  setwd("")
+  }
+  else{
+  setwd("C:/Users/Usuario/Documents/GitHub/Problem Set 1")
+  }
+}
+
+dir_set()
+
+
+pacman:: p_load(rvest, tidyverse, skimr, stargazer)
+
+```
+
+## Introduction
+
+The task of this Problem Set is to predict individual income for Bogotá citizens as a result of a Big Data, Econometrics and Machine Learning processing using the 2018 households survey, GEIH 2018.
+
+This document has four parts: The first one consist of the data processing, loading data, describing data, data cleaning, and describing the final data set. The second part uses an econometric model based on age to predict the individual income. The third part uses an econometric model based on gender earning gaps to predict the individual income.
+
+## First Part
+
+### Data loading and initial description
+
+```{r web scraping, eval=FALSE, include=FALSE}
+problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
+
+GEIH_2018<- data.frame()
+for (url in problem_set_URL){
+  print(url)
+  df <- as.data.frame(read_html(url)%>%
+                        html_table())
+  GEIH_2018<-rbind(GEIH_2018,df)
+  
+}
+
+# save data in RData and csv files
+save(GEIH_2018, file = "stores/GEIH_2018.RData")
+write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
+
+
+# load data without WS
+load("stores/GEIH_2018.RData")
+
+```
+
+#### Loading data (Web Scraping)
+The data sets that we where handled are a partial set of the entire national GEIH survey done by DANE in 2018. In these data sets we have only information of 
+surveyed people from Bogotá. 
+
+However the data isn`t avaible as a whole data set for its download, it is in 10 html table format web pages for its online visualization. So, we first had to use a Web Scraping algorithm to download the data, set by set and afterwards binding all together. 
+
+In synthesis, the whole data set has 32,177 observations, one for each household surveyed in Bogotá, each survey was done to only one person in the household, so there is one observation per individual (person) in the data set. 
+
+The survey has 178 variables that ask about multiple topics, the ones of our interest are age, sex, education, type of social security system, employment, professional area of their work, different types of income (labor, rent, retirement pension, etc.). However, there are many of these variables that are question sets that are only answered by a sub population filtered by a broader question. For example, the variable P6580 refers to the question "¿el mes pasado recibió bonificaciones?", therefore, variables p6580s1 and p6580s1, are sub questions of the latter, "¿cuánto recibió por bonificaciones?" and "¿incluyó este valor en los ingresos del mes pasado ($ ____) que me declaró?". 
+
+In conclusion, this data set bring with it a lot of doubts on which variables are the most reliable to the analysis, not because the veracity of the information (which we don't doubt), but because the completeness, and absence of missing values. Hence, we have to choose the appropriately the variables that we want to use in terms of their economic interpretation and their completeness. Consequently, after narrowing down the data set, we need to make a better description of the variables, to choose the propper ones. 
+

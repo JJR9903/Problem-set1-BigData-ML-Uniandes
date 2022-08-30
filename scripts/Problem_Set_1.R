@@ -9,9 +9,11 @@
 
 rm(list=ls())
 
+
+
 # este setwd por ahora no esta funcionando, toca que cada uno lo haga independiente mientras logro que funcione. att: Juan Jose
 dir_set <- function(){
-  if("/Users/JuanJose"%in%getwd()){
+  if(Sys.info()["user"]=="JuanJose"){
     setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1/GitHub")
   }
   else if("/Users/PC-portatil"%in%getwd()){
@@ -28,7 +30,7 @@ dir_set()
 pacman:: p_load(rvest, tidyverse, skimr, stargazer)
 
 
-##### 1. Web Scraping data set (GEIH 2018 - Bogotá)
+##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
 problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
 
 GEIH_2018<- data.frame()
@@ -44,9 +46,21 @@ for (url in problem_set_URL){
 save(GEIH_2018, file = "stores/GEIH_2018.RData")
 write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 
+##### 1.a.2  Describe data #####
 
-#load GEIH_2018
+#Loading data without web Scraping step
 load("stores/GEIH_2018.RData")
+
+
+
+
+
+
+
+
+
+
+
 
 
 ##Filtrar por mayores de edad
@@ -57,16 +71,12 @@ GEIH_2018<-GEIH_2018%>%
 
 #Seleccionar variable de Ingreso
 
-GEIH_2018_ingreso <- GEIH_2018[,grep('^y', names(GEIH_2018))]
-GEIH_2018_ingreso2 <- GEIH_2018[,grep('^ie', names(GEIH_2018))]
-GEIH_2018_ingreso3 <- GEIH_2018[,grep('^ing', names(GEIH_2018))]
-GEIH_2018_ingreso4 <- GEIH_2018[,grep('^im', names(GEIH_2018))]
-GEIH_2018_ingreso5 <- GEIH_2018[,grep('^iof', names(GEIH_2018))]
+GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
 
-GEIH_ingreso<- cbind(GEIH_2018_ingreso,GEIH_2018_ingreso2,GEIH_2018_ingreso3,GEIH_2018_ingreso4,GEIH_2018_ingreso5)
-names(GEIH_ingreso)
-skim(GEIH_ingreso)
 
+
+
+######### 2. Age-earnings profile ##########
 GEIH_2018$age2<-GEIH_2018$age^2
 #Nos quedamos con Ingtot
  #Modelo 1.0
