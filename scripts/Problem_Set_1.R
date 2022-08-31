@@ -54,8 +54,8 @@ load("stores/GEIH_2018.RData")
 
 
 
-
-
+str(GEIH_2018) # structure of dataset
+head(GEIH_2018) # first 6 observations
 
 
 
@@ -72,38 +72,41 @@ GEIH_2018<-GEIH_2018%>%
 
 skim(GEIH_2018)
 
-par(mfrow=c(2,2))
-hist(GEIH_2018$age, main="Age of surveyed people distribution", col= '#28BFE8',xlab = "Age")
-hist(GEIH_2018$sex, main="Distribución de la edad de los encuestados",col= '#28BFE8',xlab = "sexo")
-hist(GEIH_2018$clase, main="Distribución de la edad de los encuestados",col= '#28BFE8',xlab = "Zona")
-hist(GEIH_2018$age, main="Distribución de la edad de los encuestados")+  
-  theme_minimal()
-
 
 age <- ggplot(GEIH_2018, aes(age)) +
-  geom_histogram(fill = "#28BFE8", color = "white") + 
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
   geom_vline(aes(xintercept=mean(age),color="Mean"), size=1)+
   geom_vline(aes(xintercept=mean(age)+sd(age),color="sd"), linetype="dashed", size=1)+
   geom_vline(aes(xintercept=mean(age)-sd(age),color="sd"), linetype="dashed", size=1)+
   scale_color_manual(name= "age", values = c(Mean = "blue", sd = "red"))+
   theme_minimal()
 
-estrato <- ggplot(GEIH_2018, aes(estrato1)) +
-  geom_histogram(fill = "#28BFE8", color = "white",binwidth=1) + 
-  geom_vline(aes(xintercept=mean(estrato1),color="Mean"), size=1)+
-  geom_vline(aes(xintercept=mean(estrato1)+sd(estrato1),color="sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(estrato1)-sd(estrato1),color="sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "Estrato", values = c(Mean = "blue", sd = "red"))+
-  theme_minimal()
-
-
 plot_grid(age, estrato,labels = c("Age", "Estrato"), ncol = 2, nrow = 1)
 
-table(GEIH_2018$estrato1)
 
-#verificar las variables dicotomas
-range(GEIH_2018$clase)
-range(GEIH_2018$sex)
+## variables dummies 
+GEIH_2018$dummy=1
+
+sum_caract= summary(GEIH_2018%>%select(sex,clase,college,cotPension,cuentaPropia,formal,informal,inac,inac,ocu,pea,pet,wap,microEmpresa), digits = 4)
+
+sex = GEIH_2018%>% 
+  group_by(sex)%>%  
+  count() %>% 
+  ungroup() %>% 
+  mutate(Porcentage = `n` / sum(`n`),
+         Sexo = case_when(sex == 1 ~ "Mujeres", + sex == 0 ~ "Hombres"))%>%
+  group_by(sex)%>%  
+  mutate(etiquetas = paste(Sexo, toString(round(Porcentage*100, digits = 2)),"%"))
+
+ggplot(sex, aes(x = 1, weight = Porcentage, fill = Sexo)) +
+  geom_bar(width = 1,)+
+  geom_text(aes(label = etiquetas, y=Porcentage ),position = position_stack(vjust = 0.5))+
+  coord_polar(theta = "y")+
+  theme_void()
+  
+  
+sum_Ing= summary(GEIH_2018%>%select(grep('^y|ie|ing|im|iof', names(GEIH_2018))), digits = 4)
+
 
 
 #Seleccionar variable de Ingreso
