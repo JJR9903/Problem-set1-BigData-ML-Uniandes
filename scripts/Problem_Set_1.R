@@ -1,5 +1,5 @@
 ##### PROBLEM SET 1 - SCRIPT ##### 
-## Authors: Juan José Rincón , .... 
+## Authors: Juan José Rincón , Juan Andres Ospina, Juanita Chacón 
 ## Description: development of 1 problem set of Big Data and Machine Leanring for applied economics course at Universidad de los Andes 2022-2
 ## Creation Date: 25/08/2022
 ## Modification Date: 25/08/2022
@@ -117,10 +117,26 @@ GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
 
 
 
-######### 2. Age-earnings profile ##########
+      ######### 2. Age-earnings profile ##########
+
 GEIH_2018$age2<-GEIH_2018$age^2
 #Nos quedamos con Ingtot
  #Modelo 1.0
-lm(ingtot~age+age2,GEIH_2018)
+model1<-lm(ingtot~age+age2,GEIH_2018)
+
+
+
+    ######### 3. Age-earnings profile ##########
+
+
+#Ln de Ingtot 
+GEIH_2018$lning<-log(GEIH_2018$ingtot)
+GEIH_2018$lning[which(!is.finite(GEIH_2018$lning))] <- 0
+GEIH_2018$lning
+
+#MODELO 2.0
+#0 es mujer 
+model2<-lm(lning~sex==0,GEIH_2018)
+
 
 
