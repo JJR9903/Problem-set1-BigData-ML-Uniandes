@@ -30,7 +30,8 @@ dir_set()
 pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot)
 
 
-##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
+        ##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
+
 problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
 
 GEIH_2018<- data.frame()
@@ -46,7 +47,7 @@ for (url in problem_set_URL){
 save(GEIH_2018, file = "stores/GEIH_2018.RData")
 write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 
-##### 1.a.2  Describe data #####
+        ##### 1.a.2  Describe data #####
 
 #Loading data without web Scraping step
 load("stores/GEIH_2018.RData")
@@ -73,6 +74,13 @@ skim=skim[skim$complete_rate > 0.2, ]
 skim = as.list(subset(skim, select =skim_variable))
 GEIH_2018 = subset(GEIH_2018, select = skim[["skim_variable"]] )
 
+# verificamos ciertas variables que por los filtros solo deberían tener una opcion (depto=11, dominio=BOGOTA,clase==1) y las eliminamos
+sum(GEIH_2018$depto==11)==nrow(GEIH_2018)
+sum(GEIH_2018$dominio=="BOGOTA")==nrow(GEIH_2018)
+sum(GEIH_2018$clase==1)==nrow(GEIH_2018)
+GEIH_2018 = subset(GEIH_2018, select = -c(dominio,depto,clase))
+
+skim=skim(GEIH_2018)
 
 
 #### descripción de los datos ####
@@ -120,6 +128,14 @@ GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
 
 
 
+
+
+
+
+#### Estandarización de los datos ####
+
+GEIH_2018_scaled = as.data.frame(scale(GEIH_2018, center = TRUE, scale = TRUE))
+skim_scaled=skim(GEIH_2018_scaled)
 
       ######### 2. Age-earnings profile ##########
 
