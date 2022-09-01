@@ -52,26 +52,30 @@ write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 load("stores/GEIH_2018.RData")
 
 
-
+#### Data Cleaning ####
 
 str(GEIH_2018) # structure of dataset
 head(GEIH_2018) # first 6 observations
 
-
-
-
-
-
-
 ##Filtrar por mayores de edad
-names(GEIH_2018)
-
 GEIH_2018<-GEIH_2018%>%
   filter(GEIH_2018$age>18)
 
+# eliminamos variables que salen tal cual como en la encuesta, pues hay otras variables construidas a partir de estas
+# con esto reducimos el tamaño de la base de 174 variables a 73  
+GEIH_2018 = subset(GEIH_2018, select = -c(grep('^p6|p5|p7|cc|fex', names(GEIH_2018))) )
+GEIH_2018 = subset(GEIH_2018, select = -c(directorio,fweight,Var.1,mes,orden,secuencia_p) )
 
-skim(GEIH_2018)
+#revisamos la base de datos
+skim=skim(GEIH_2018)
+#eliminamos variables que no sirven por tener solo el 20% de complete rate 
+skim=skim[skim$complete_rate > 0.2, ]
+skim = as.list(subset(skim, select =skim_variable))
+GEIH_2018 = subset(GEIH_2018, select = skim[["skim_variable"]] )
 
+
+
+#### descripción de los datos ####
 
 age <- ggplot(GEIH_2018, aes(age)) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
