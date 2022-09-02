@@ -31,15 +31,15 @@ pacman:: p_load(rvest, tidyverse, skimr, stargazer)
 
 ```
 
-## Introduction
+## Introducción
 
-The task of this Problem Set is to predict individual income for BogotÃ¡ citizens as a result of a Big Data, Econometrics and Machine Learning processing using the 2018 households survey, GEIH 2018.
+En este Problem Set se busca predecir el ingreso de los ciudadanos de Bogotá como el resultado del procesamiento de la Gran Encuesta Integrada de Hogares (GEIH) para 2018 con herramientas de econometría, Big Data y Machine Learning.
 
-This document has four parts: The first one consist of the data processing, loading data, describing data, data cleaning, and describing the final data set. The second part uses an econometric model based on age to predict the individual income. The third part uses an econometric model based on gender earning gaps to predict the individual income.
+Este documento se encuentra dividido en cuatro secciones: La primera consiste en el procesamiento de los datos, su carga, descripción, limpieza y la descripción de la base final que se utilizará, la segunda parte utiliza un modelo econométrico que usa la edad para explicar el ingreso individual. la tercera parte contiene un modelo econometrico que involucra el género para explotar las brechas salariales y explicar el ingreso individual, y la última parte consiste en un...
 
-## First Part
+## Primera parte
 
-### Data loading and initial description
+### Carga de datos y descripción inicial
 
 ```{r web scraping, eval=FALSE, include=FALSE}
 problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
@@ -60,19 +60,19 @@ write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 load("stores/GEIH_2018.RData")
 ```
 
-#### Loading data (Web Scraping)
-The data sets that we where handled are a partial set of the entire national GEIH survey done by DANE in 2018. In these data sets we have only information of 
-surveyed people from BogotÃ¡. 
+#### Carga de datos (Web Scraping)
 
-However the data isn`t avaible as a whole data set for its download, it is in 10 html table format web pages for its online visualization. So, we first had to use a Web Scraping algorithm to download the data, set by set and afterwards binding all together. 
+Los sets de datos utilizados como insumos consisten en una serie de diez archivos parciales de la GEIH, realizada por el Departamento Nacional de Estadística (DANE) en 2018. En esta base sólo se cuenta con información de ciudadanos de Bogotá.
 
-In synthesis, the whole data set has 32,177 observations, one for each household surveyed in BogotÃ¡, each survey was done to only one person in the household, so there is one observation per individual (person) in the data set. 
+Por tanto, para comenzar se hizo web scraping de los diez archivos en formato html con el fin de descargar los datos, set por set, y así poder pegarlos una vez se tenían todos.
 
-The survey has 178 variables that ask about multiple topics, the ones of our interest are age, sex, education, type of social security system, employment, professional area of their work, different types of income (labor, rent, retirement pension, etc.). However, there are many of these variables that are question sets that are only answered by a sub population filtered by a broader question. For example, the variable P6580 refers to the question "Â¿el mes pasado recibiÃ³ bonificaciones?", therefore, variables p6580s1 and p6580s1, are sub questions of the latter, "Â¿cuÃ¡nto recibiÃ³ por bonificaciones?" and "Â¿incluyÃ³ este valor en los ingresos del mes pasado ($ ____) que me declarÃ³?". 
+Como resutado, se obtuvo un data set con 32177 observaciones, una para cada hogar encuestado en Bogotá, cabe decir que cada encuesta se realiza a una sola persona por hogar, así que cada encuesta se puede asociar a un individuo.
 
-In conclusion, this data set bring with it a lot of doubts on which variables are the most reliable to the analysis, not because the veracity of the information (which we don't doubt), but because the completeness, and absence of missing values. Hence, we have to choose the appropriately the variables that we want to use in terms of their economic interpretation and their completeness. Consequently, after narrowing down the data set, we need to make a better description of the variables, to choose the propper ones. 
+La encuesta cuenta con 178 variables, correspondientes a preguntas que se realizan al individuo. No obstante, para este ejercicio sólo nos interesa usar las variables de edad, sexo, educación, tipo de sistema de seguridad socia, empleo, área profesional de empleo, diferentes tipos de ingreso (laboral, rentas, pensiones, etc.). Sin embargo, hay varias preguntas que sólo se responden por algunos de los encuestados, generando un gran número de missing values. Por ejemplo, la variable P6580 se refiere a la pregunta "¿el mes pasado recibía bonificaciones?", entonces sólo aquellas preguntas que respondan sí podrán contestar preguntas subsiguientes como la P6580s1 "¿Cuánto recibió por bonificaciones?".
 
-#### Data Cleaning and Description
+En conclusión, este set de datos trae consigo bastantes preguntas sobre cuáles variables son las más apropiadas para el análisis por la confiablidad de los resultados que se puede obtener con base en el número de observaciones con que se cuente y la facilidad de su análisis económico. En conculisión, es necesario hacer una descripción juiciosa de los datos para poder seleccionar las variables correctas.
+
+#### Limpieza y descripción de datos.
 ```{r Data Cleaning, echo=FALSE, warning=FALSE}
 
 GEIH_2018<-GEIH_2018%>%
@@ -81,4 +81,27 @@ GEIH_2018<-GEIH_2018%>%
 skim(GEIH_2018)
 
 ```
+La limpieza de los datos se inicia con filtrar a los ciudadanos que son mayores de 18 años, por lo que se debe cumplir con la condición de que la variable _age_ sea estrictamente mayor a 18.
+
+Posteriormente, se procede a 
+
+
+##2.Edad e Ingreso
+
+La base de datos cuenta con numerosas variables de ingreso, estas están desagregadas por tipo de ingreso. Para escoger una se decidió ver cuáles tenían menos missing values, posterior a ello se identificó que la variable _ingtot_, referente al ingreso total no tenía missing values y contenía información de la variable de ingreso total observado y demás ingresos, dando una buena aproximación del poder adquisitivo al que accede un individuo por distintos conceptos, laborales, pensiones, rentas, etc.
+
+Posteriormente, se corrió el modelo:
+    $Ingreso=\beta_0 + \beta_1*Edad + \beta_2*Edad^2+ u$
+    
+Sus resultados se muestran en la tabla a continuación:
+
+```{r}
+model1<-lm(ingtot~age+age2,GEIH_2018)
+tab_model(model1, file="model1.html")
+```
+
+ El coeficiente $\beta_1$ es positivo, lo que indica que un año de edad incrementa marginalmente el ingreso de un individuo mayor de 18 años. De modo contrario, el coeficiente $\beta_2$ tiene un signo negativo, indicando que existe una concavidad en la función polinómica de segundo grado, tal que se puede encontrar un punto máximo del ingreso en función de la edad. Finalmente, el coeficiente $\beta_0$ es negativo, para poder analizar este estimador se debe tener en cuenta que la variable _age_ tiene un mínimo en 19, por lo que no es que haya un ingreso base negativo, sino que como la edad comienza en un valor positivo, este intercepto nunca tomará el valor del ingreso en una estimación de variable dependiente, sino que será una parte de ajuste del modelo a los datos teniendo en cuenta los otros dos estimadores.
+ 
+ 
+ 
 

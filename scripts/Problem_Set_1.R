@@ -20,7 +20,7 @@ dir_set <- function(){
   setwd("")
   }
   else{
-  setwd("C:/Users/Usuario/Documents/GitHub/Problem Set 1")
+  setwd("C:/Users/Usuario/Documents/GitHub/Problem-set1-BigData-ML-Uniandes/stores")
   }
 }
 
@@ -125,9 +125,8 @@ sum_Ing= summary(GEIH_2018%>%select(grep('^y|ie|ing|im|iof', names(GEIH_2018))),
 
 GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
 
-
-
-
+#Ver número de missing values
+skim(GEIH_2018_ingreso)
 
 
 
@@ -153,6 +152,7 @@ model1<-lm(ingtot~age+age2,GEIH_2018)
 GEIH_2018$lning<-log(GEIH_2018$ingtot)
 GEIH_2018$lning[which(!is.finite(GEIH_2018$lning))] <- 0
 GEIH_2018$lning
+
 
 #MODELO 2.0
 #0 es mujer 
