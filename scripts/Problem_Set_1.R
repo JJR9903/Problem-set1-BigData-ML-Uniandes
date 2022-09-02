@@ -109,7 +109,7 @@ skim=skim(GEIH_2018)
 ### Descripción de variables categoricas ###
 GEIH_2018$dummy=1
 
-sexo_PieG <- ggplot(data=GEIH_2018) +
+sexo_PG <- ggplot(data=GEIH_2018) +
   geom_bar(aes(x = 1, weight = dummy, fill = sex),width = 1)+
   coord_polar(theta = "y")+
   scale_fill_manual(values = c("0"="#28BFE8" , "1"="#FA8072"), 
@@ -120,29 +120,95 @@ sexo_PieG <- ggplot(data=GEIH_2018) +
 
 
 
-estrato1 <-ggplot(data=GEIH_2018) +
+estrato_PG <-ggplot(data=GEIH_2018) +
   geom_bar(aes(x = 1, weight = dummy, fill = estrato1),width = 1)+
   coord_polar(theta = "y")+
   scale_fill_manual(values = c("1"="#F5B7B1" , "2"="#E8DAEF", "3"="#85C1E9","4"="#73C6B6","5"="#F8C471","6"="#BA4A00"), 
-                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['1']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 1")
-                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['2']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 2")
-                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['3']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 3")
-                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['4']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 4")
-                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['5']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 5")
-                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['6']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 6")
+                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['1']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 1")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['2']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 2")
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['3']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Esrtato 3")
+                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['4']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 4")
+                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['5']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 5")
+                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['6']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 6")
                               ) , 
-                    name = "Sexo")+
+                    name = "Estrato de la vivienda")+
+  theme_void()
+
+NivelEducativo_BG <- ggplot(data=GEIH_2018) +
+  geom_bar(stat="identity",aes(y=dummy, x=maxEducLevel, fill = maxEducLevel), width = 0.5)+
+  scale_fill_manual( values = c("1"="#9b5fe0" , "2"="#16a4d8", "3"="#60dbe8","4"="#8bd346","5"="#efdf48","6"="#f9a52c","7"="#d64e12"),
+                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Ninguno")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Preescolar")
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Primaria incompelta")
+                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['4']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Primaria completa")
+                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['5']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Secundaria incompleta")
+                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['6']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Secundaria completa")
+                              ,"7"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['7']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Superior o universitaria")
+                    ) , 
+                    name = "Máximo Nivel Educativo alcanzado")+
+  theme_void()# segun esto hay más universitarios que media, no tiene mucho sentido 
+
+regSalud_PG <- ggplot(data=GEIH_2018) +
+  geom_bar(aes(x = 1, weight = dummy, fill = regSalud),width = 1)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("1"="#56ba5a" , "2"="#cb3747","3"="#0cc6b8"), 
+                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Contributivo")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Especial") 
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Subsidiado") 
+                    ) ,
+                    name = "Regimen de Seguridad Social en Salud")+
   theme_void()
 
 
+GEIH_2018$cotPension_nan=GEIH_2018$cotPension
+GEIH_2018$cotPension_nan<-as.character(GEIH_2018$cotPension_nan)
+GEIH_2018$cotPension_nan[is.na(GEIH_2018$cotPension_nan)] <- as.character(0)
+GEIH_2018$cotPension_nan<-as.factor(GEIH_2018$cotPension_nan)
+
+
+cotPension_PG <- ggplot(data=GEIH_2018) +
+  geom_bar(aes(x = 1, weight = dummy, fill = cotPension_nan),width = 1)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("0"="#0a2d4d","1"="#439790" , "2"="#fd6767","3"="#7a9c48"), 
+                    label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Nan") 
+                              ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Cotiza a pension")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","No cotiza a pension") 
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Pensionado") 
+                             
+                    ) ,
+                    name = "Estado Pensional",na.translate=T)+
+  theme_void()
+
+GEIH_2018$relab_nan=GEIH_2018$relab
+GEIH_2018$relab_nan<-as.character(GEIH_2018$relab_nan)
+GEIH_2018$relab_nan[is.na(GEIH_2018$relab_nan)] <- as.character(0)
+GEIH_2018$relab_nan<-as.factor(GEIH_2018$relab_nan)
+
+relab_BG <- ggplot(data=GEIH_2018) +
+  geom_bar(stat="identity",aes(y=dummy, x=relab_nan, fill = relab_nan), width = 0.5)+
+  scale_fill_manual( values = c("0"="#e3342f","1"="#f6993f" , "2"="#ffed4a", "3"="#38c172","4"="#4dc0b5","5"="#3490dc","6"="#6574cd","7"="#9561e2","8"="#f66d9b","9"="656950"),
+                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Nan")
+                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Obrero o empleado de empresa particular")
+                               ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Obrero o empleado del gobierno")
+                               ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Empleado doméstico")
+                               ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['4']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador por cuenta propia")
+                               ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['5']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Patron o empleadora")
+                               ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['6']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador familiar sin remuneracion")
+                               ,"7"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['7']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador sin remuneracin en empresas o negocios de otros hogares")
+                               ,"8"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['8']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Jornalero o peon")
+                               ,"9"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['9']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Otro")
+                     ) , 
+                     name = "Relación Laboral")+
+  theme_void()
+
+
+plot_grid(sexo_PG, estrato_PG,regSalud_PG,cotPension_PG,NivelEducativo_BG ,relab_BG, ncol = 2, nrow = 3)
+
+#hace falta oficio y sizefirm (ver que hacer con ellas que no son muy indicativas) y las dummies 
 
 ### Descripción de variables numericas (NO de ingreso) ### 
 
-
-### Descripción de variables de Ingreso ## 
-# comparación entre variables que dicen cosas parecidas 
-# se escogen algunas y de esas se comparan por edad y sexo 
-
+# age y hoursWorkUsual
 age <- ggplot(GEIH_2018, aes(age)) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
   geom_vline(aes(xintercept=mean(age),color="Mean"), size=1)+
@@ -151,39 +217,20 @@ age <- ggplot(GEIH_2018, aes(age)) +
   scale_color_manual(name= "age", values = c(Mean = "blue", sd = "red"))+
   theme_minimal()
 
-plot_grid(age, estrato,labels = c("Age", "Estrato"), ncol = 2, nrow = 1)
 
 
-## variables dummies 
-GEIH_2018$dummy=1
 
-sum_caract= summary(GEIH_2018%>%select(sex,clase,college,cotPension,cuentaPropia,formal,informal,inac,inac,ocu,pea,pet,wap,microEmpresa), digits = 4)
-
-sex = GEIH_2018%>% 
-  group_by(sex)%>%  
-  count() %>% 
-  ungroup() %>% 
-  mutate(Porcentage = `n` / sum(`n`),
-         Sexo = case_when(sex == 1 ~ "Mujeres", + sex == 0 ~ "Hombres"))%>%
-  group_by(sex)%>%  
-  mutate(etiquetas = paste(Sexo, toString(round(Porcentage*100, digits = 2)),"%"))
-
-ggplot(sex, aes(x = 1, weight = Porcentage, fill = Sexo)) +
-  geom_bar(width = 1,)+
-  geom_text(aes(label = etiquetas, y=Porcentage ),position = position_stack(vjust = 0.5))+
-  coord_polar(theta = "y")+
-  theme_void()
-  
+### Descripción de variables de Ingreso ## 
+# comparación entre variables que dicen cosas parecidas 
+# se escogen algunas y de esas se comparan por edad y sexo 
   
 sum_Ing= summary(GEIH_2018%>%select(grep('^y|ie|ing|im|iof', names(GEIH_2018))), digits = 4)
-
-
 
 #Seleccionar variable de Ingreso
 
 GEIH_2018_ingreso <- GEIH_2018[,grep('^y|ie|ing|im|iof', names(GEIH_2018))]
 
-#Ver n�mero de missing values
+#Ver n?mero de missing values
 skim(GEIH_2018_ingreso)
 
 
