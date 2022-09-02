@@ -83,7 +83,65 @@ GEIH_2018 = subset(GEIH_2018, select = -c(dominio,depto,clase))
 skim=skim(GEIH_2018)
 
 
+#### Verificar los tipos de las variables ####
+
+# variables categoricas
+cats = c("sex", "maxEducLevel","college","cotPension","cuentaPropia","dsi","estrato1","formal","ina","inac","informal","microEmpresa","ocu","oficio","pea","pet","regSalud","relab","wap","sizeFirm")
+for (v in cats) {
+  GEIH_2018[, v] <- as.factor(GEIH_2018[, v, drop = T])
+}
+
+## revisar variables categoricas que dicen lo mismo
+table(GEIH_2018$ina)
+table(GEIH_2018$inac)	
+table(GEIH_2018$pea)	
+GEIH_2018$ina<-NULL
+GEIH_2018$inac<-NULL
+
+table(GEIH_2018$formal)	
+table(GEIH_2018$informal)	
+GEIH_2018$informal<-NULL
+
+skim=skim(GEIH_2018)
+
 #### descripción de los datos ####
+
+### Descripción de variables categoricas ###
+GEIH_2018$dummy=1
+
+sexo_PieG <- ggplot(data=GEIH_2018) +
+  geom_bar(aes(x = 1, weight = dummy, fill = sex),width = 1)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("0"="#28BFE8" , "1"="#FA8072"), 
+                    label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['sex'])['1']) / sum(as.numeric(table(GEIH_2018['sex']))),2)),"%","Hombres")
+                             ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['sex'])['0']) / sum(as.numeric(table(GEIH_2018['sex']))),2)),"%"),"Mujeres") , 
+                    name = "Sexo")+
+  theme_void()
+
+
+
+estrato1 <-ggplot(data=GEIH_2018) +
+  geom_bar(aes(x = 1, weight = dummy, fill = estrato1),width = 1)+
+  coord_polar(theta = "y")+
+  scale_fill_manual(values = c("1"="#F5B7B1" , "2"="#E8DAEF", "3"="#85C1E9","4"="#73C6B6","5"="#F8C471","6"="#BA4A00"), 
+                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['1']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 1")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['2']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 2")
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['3']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 3")
+                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['4']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 4")
+                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['5']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 5")
+                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['6']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estatro 6")
+                              ) , 
+                    name = "Sexo")+
+  theme_void()
+
+
+
+### Descripción de variables numericas (NO de ingreso) ### 
+
+
+### Descripción de variables de Ingreso ## 
+# comparación entre variables que dicen cosas parecidas 
+# se escogen algunas y de esas se comparan por edad y sexo 
 
 age <- ggplot(GEIH_2018, aes(age)) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
