@@ -244,7 +244,59 @@ skim_scaled=skim(GEIH_2018_scaled)
       ######### 2. Age-earnings profile ##########
 
 GEIH_2018$age2<-GEIH_2018$age^2
-#Nos quedamos con Ingtot
+#Nos quedamos con y_total_m y la estandarizamos
+GEIH_2018$scaled_y<-scale(GEIH_2018$y_total_m)
+summary(GEIH_2018$scaled_y)
+
+#Llenamos los missing con estratificacion por estrato socioeconmico y nivel educativo
+GEIH_2018$estrato<-as.numeric(GEIH_2018$estrato1)
+GEIH_2018$n_edu<-as.numeric(GEIH_2018$maxEducLevel)
+
+GEIH_2018<-GEIH_2018%>%
+  mutate(scaled_y=case_when((is.na(scaled_y)==TRUE & estrato==1 & n_edu==1)~0.36,
+                            (is.na(scaled_y)==TRUE & estrato==2 & n_edu==1)~0.83,
+                            (is.na(scaled_y)==TRUE & estrato==3 & n_edu==1)~0.3,
+                            (is.na(scaled_y)==TRUE & estrato==4 & n_edu==1)~0.03,
+                            (is.na(scaled_y)==TRUE & estrato==5 & n_edu==1)~0,
+                            (is.na(scaled_y)==TRUE & estrato==6 & n_edu==1)~0.01,
+                            (is.na(scaled_y)==TRUE & estrato==1 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==2 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==3 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==4 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==5 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==6 & n_edu==2)~0,
+                            (is.na(scaled_y)==TRUE & estrato==1 & n_edu==3)~1.35,
+                            (is.na(scaled_y)==TRUE & estrato==2 & n_edu==3)~3.76,
+                            (is.na(scaled_y)==TRUE & estrato==3 & n_edu==3)~1.7,
+                            (is.na(scaled_y)==TRUE & estrato==4 & n_edu==3)~0.09,
+                            (is.na(scaled_y)==TRUE & estrato==5 & n_edu==3)~0.03,
+                            (is.na(scaled_y)==TRUE & estrato==6 & n_edu==3)~0.01,
+                             (is.na(scaled_y)==TRUE & estrato==1 & n_edu==4)~1.69,
+                             (is.na(scaled_y)==TRUE & estrato==2 & n_edu==4)~5.53,
+                             (is.na(scaled_y)==TRUE & estrato==3 & n_edu==4)~3.23,
+                             (is.na(scaled_y)==TRUE & estrato==4 & n_edu==4)~0.19,
+                             (is.na(scaled_y)==TRUE & estrato==5 & n_edu==4)~0.06,
+                             (is.na(scaled_y)==TRUE & estrato==6 & n_edu==4)~0.04,
+                             (is.na(scaled_y)==TRUE & estrato==1 & n_edu==5)~1.63,
+                             (is.na(scaled_y)==TRUE & estrato==2 & n_edu==5)~5.9,
+                             (is.na(scaled_y)==TRUE & estrato==3 & n_edu==5)~3.72,
+                             (is.na(scaled_y)==TRUE & estrato==4 & n_edu==5)~0.21,
+                             (is.na(scaled_y)==TRUE & estrato==5 & n_edu==5)~0.04,
+                             (is.na(scaled_y)==TRUE & estrato==6 & n_edu==5)~0.04,
+                             (is.na(scaled_y)==TRUE & estrato==1 & n_edu==6)~3.68,
+                             (is.na(scaled_y)==TRUE & estrato==2 & n_edu==6)~14.18,
+                             (is.na(scaled_y)==TRUE & estrato==3 & n_edu==6)~10.63,
+                             (is.na(scaled_y)==TRUE & estrato==4 & n_edu==6)~0.89,
+                             (is.na(scaled_y)==TRUE & estrato==5 & n_edu==6)~0.23,
+                             (is.na(scaled_y)==TRUE & estrato==6 & n_edu==6)~0.21,
+                             (is.na(scaled_y)==TRUE & estrato==1 & n_edu==7)~1.62,
+                             (is.na(scaled_y)==TRUE & estrato==2 & n_edu==7)~10.61,
+                             (is.na(scaled_y)==TRUE & estrato==3 & n_edu==7)~17.25,
+                             (is.na(scaled_y)==TRUE & estrato==4 & n_edu==7)~5.93,
+                             (is.na(scaled_y)==TRUE & estrato==5 & n_edu==7)~1.77,
+                             (is.na(scaled_y)==TRUE & estrato==6 & n_edu==7)~2.27,
+                            TRUE ~ 0))
+
  #Modelo 1.0
 model1<-lm(ingtot~age+age2,GEIH_2018)
 
@@ -261,7 +313,7 @@ GEIH_2018$lning
 
 #MODELO 2.0
 #0 es mujer 
-model2<-lm(lning~sex==0,GEIH_2018)
+model2<-lm(lning~sex,GEIH_2018)
 
 
 
