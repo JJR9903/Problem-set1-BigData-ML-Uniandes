@@ -114,8 +114,8 @@ sexo_PG <- ggplot(data=GEIH_2018) +
   coord_polar(theta = "y")+
   scale_fill_manual(values = c("0"="#28BFE8" , "1"="#FA8072"), 
                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['sex'])['1']) / sum(as.numeric(table(GEIH_2018['sex']))),2)),"%","Hombres")
-                             ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['sex'])['0']) / sum(as.numeric(table(GEIH_2018['sex']))),2)),"%"),"Mujeres") , 
-                    name = "Sexo")+
+                             ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['sex'])['0']) / sum(as.numeric(table(GEIH_2018['sex']))),2)),"%","Mujeres")
+                             ) , name = "Sexo")+
   theme_void()
 
 
@@ -126,20 +126,19 @@ estrato_PG <-ggplot(data=GEIH_2018) +
   scale_fill_manual(values = c("1"="#F5B7B1" , "2"="#E8DAEF", "3"="#85C1E9","4"="#73C6B6","5"="#F8C471","6"="#BA4A00"), 
                     label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['1']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 1")
                               ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['2']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 2")
-                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['3']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Esrtato 3")
-                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['4']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 4")
-                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['5']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 5")
-                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['6']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 6")
-                              ) , 
-                    name = "Estrato de la vivienda")+
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['3']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","Estrato 3")
+                              ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['4']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","  Estrato 4")
+                              ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['5']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","  Estrato 5")
+                              ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['estrato1'])['6']) / sum(as.numeric(table(GEIH_2018['estrato1']))),2)),"%","  Estrato 6")
+                              ) , name = "Estrato de la vivienda")+
   theme_void()
 
 NivelEducativo_BG <- ggplot(data=GEIH_2018) +
   geom_bar(stat="identity",aes(y=dummy, x=maxEducLevel, fill = maxEducLevel), width = 0.5)+
   scale_fill_manual( values = c("1"="#9b5fe0" , "2"="#16a4d8", "3"="#60dbe8","4"="#8bd346","5"="#efdf48","6"="#f9a52c","7"="#d64e12"),
-                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Ninguno")
-                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Preescolar")
-                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Primaria incompelta")
+                    label = c("1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Ninguno")
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Preescolar")
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Primaria incompelta")
                               ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['4']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Primaria completa")
                               ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['5']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Secundaria incompleta")
                               ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['6']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Secundaria completa")
@@ -157,9 +156,9 @@ regSalud_PG <- ggplot(data=GEIH_2018) +
   geom_bar(aes(x = 1, weight = dummy, fill = regSalud_nan),width = 1)+
   coord_polar(theta = "y")+
   scale_fill_manual(values = c("0"="#9D9B92","1"="#56ba5a" , "2"="#cb3747","3"="#0cc6b8"), 
-                    label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Nan")
+                    label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Nan")
                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Contributivo")
-                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Especial") 
+                              ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Regimen Especial") 
                               ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['regSalud_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Regimen Subsidiado") 
                     ) ,
                     name = "Regimen de Seguridad Social en Salud")+
@@ -178,7 +177,7 @@ cotPension_PG <- ggplot(data=GEIH_2018) +
                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Nan") 
                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Cotiza a pension")
                               ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","No cotiza a pension") 
-                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Pensionado") 
+                              ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['cotPension_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Pensionado") 
                              
                     ) ,
                     name = "Estado Pensional",na.translate=T)+
@@ -192,16 +191,16 @@ GEIH_2018$relab_nan<-as.factor(GEIH_2018$relab_nan)
 relab_BG <- ggplot(data=GEIH_2018) +
   geom_bar(stat="identity",aes(y=dummy, x=relab_nan, fill = relab_nan), width = 0.5)+
   scale_fill_manual( values = c("0"="#9D9B92","1"="#f6993f" , "2"="#ffed4a", "3"="#38c172","4"="#4dc0b5","5"="#3490dc","6"="#6574cd","7"="#9561e2","8"="#f66d9b","9"="656950"),
-                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Nan")
-                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Obrero o empleado de empresa particular")
-                               ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Obrero o empleado del gobierno")
-                               ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Empleado doméstico")
+                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['0']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Nan")
+                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Obrero o empleado de empresa particular")
+                               ,"2"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['2']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Obrero o empleado del gobierno")
+                               ,"3"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","  Empleado doméstico")
                                ,"4"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['4']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador por cuenta propia")
-                               ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['5']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Patron o empleadora")
-                               ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['6']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador familiar sin remuneracion")
-                               ,"7"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['7']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Trabajador sin remuneracin en empresas o negocios de otros hogares")
-                               ,"8"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['8']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Jornalero o peon")
-                               ,"9"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['9']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Otro")
+                               ,"5"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['5']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","   Patron o empleadora")
+                               ,"6"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['6']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Trabajador familiar sin remuneracion")
+                               ,"7"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['7']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Trabajador sin remuneracin en empresas o negocios de otros hogares")
+                               ,"8"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['8']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","      Jornalero o peon")
+                               ,"9"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['relab_nan'])['9']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Otro")
                      ) , 
                      name = "Relación Laboral")+
   theme_void()
@@ -214,86 +213,158 @@ plot_grid(sexo_PG, estrato_PG,regSalud_PG,cotPension_PG,NivelEducativo_BG ,relab
 ### Descripción de variables numericas (NO de ingreso) ### 
 
 # age y hoursWorkUsual
-age <- ggplot(GEIH_2018, aes(age)) +
+age <- ggplot(GEIH_2018, aes(x=age)) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
-  geom_vline(aes(xintercept=mean(age),color="Mean"), size=1)+
-  geom_vline(aes(xintercept=mean(age)+sd(age),color="sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(age)-sd(age),color="sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "age", values = c(Mean = "blue", sd = "red"))+
+  geom_vline(aes(xintercept=mean(age),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(age)+sd(age),color="+sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(age)-sd(age),color="-sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Edad", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                    , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$age)+sd(GEIH_2018$age),2)),"= -1 sd"),
+                               "Media"=paste(as.character(round(mean(GEIH_2018$age),2)),"= media"),
+                               "+sd"=paste(as.character(round(mean(GEIH_2018$age)+sd(GEIH_2018$age),2)),"= +1 sd",)
+                               ))+
+  labs(x="Edad",y="densidad")+
   theme_minimal()
 
 
-GEIH_2018%>% select(totalHoursWorked,age,y_salary_m,y_ingLab_m,ingtot,ingtotob,y_total_m)%>%
-  summarise_all(funs(min = min, 
-                    median = median, 
-                    mean = mean,
-                    sd = sd,
-                    max = max)
-                    )
+totalHoursWorked <- ggplot(GEIH_2018, aes(x=totalHoursWorked)) +
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(age)+sd(age),color="-sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(age),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(age)-sd(age),color="+sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$totalHoursWorked,na.rm = T)+sd(GEIH_2018$totalHoursWorked,na.rm = T),2)),"= -1 sd"),
+                                "Media"=paste(as.character(round(mean(GEIH_2018$totalHoursWorked,na.rm = T),2)),"= media"),
+                                "+sd"=paste(as.character(round(mean(GEIH_2018$totalHoursWorked,na.rm = T)+sd(GEIH_2018$totalHoursWorked,na.rm = T),2)),"= +1 sd")
+                     ))+
+  labs(x="Horas trabajadas a la semana",y="densidad")+
+  theme_minimal()
+
+
+table(GEIH_2018$estrato1,GEIH_2018$maxEducLevel)
+source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+crosstab(GEIH_2018, row.vars = "estrato1", col.vars = "maxEducLevel", type = "f")
+crosstab(GEIH_2018, row.vars = "estrato1", col.vars = "maxEducLevel", type = "j")
 
 ### Descripción de variables de Ingreso ## 
 # comparación entre variables que dicen cosas parecidas 
 # se escogen algunas y de esas se comparan por edad y sexo 
-  
-
-ggplot(GEIH_2018, aes(x=y_salary_m,fill=sex)) +
-  geom_histogram() 
-+geom_point()
-  geom_vline(aes(xintercept=mean(y_salary_m),color="Mean"), size=1)+
-  geom_vline(aes(xintercept=mean(y_salary_m)+sd(y_salary_m),color="sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(y_salary_m)-sd(y_salary_m),color="sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "y_salary_m", values = c(Mean = "blue", sd = "red"))+
-  theme_minimal()
 
   # y_salary_m - principal occ.
-  ggplot(GEIH_2018, aes(x=y_salary_m))+
-    geom_histogram()
-  
-  ggplot(GEIH_2018, aes(y=y_salary_m,x=age, color=sex))+
-    geom_point()
+salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(y_salary_m/(1000000),na.rm = T)+sd(y_salary_m/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(y_salary_m/(1000000),na.rm = T),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(y_salary_m/(1000000),na.rm = T)-sd(y_salary_m/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Salario mensual (actividad principal)", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$y_salary_m/(1000000),na.rm = T)+sd(GEIH_2018$y_salary_m/(1000000),na.rm = T),2)),"= -1 sd"),
+                                "Media"=paste(as.character(round(mean(GEIH_2018$y_salary_m/(1000000),na.rm = T),2)),"= media"),
+                                "+sd"=paste(as.character(round(mean(GEIH_2018$y_salary_m/(1000000),na.rm = T)+sd(GEIH_2018$y_salary_m/(1000000),na.rm = T),2)),"= +1 sd")
+                     ))+
+  labs(x="Salario mensual (actividad principal)",y="densidad",caption="En millones")+
+  xlim(-1,40)+
+  theme_minimal()
+
+
+salary_point <- ggplot(GEIH_2018, aes(y=y_salary_m/(1000000),x=age, color="#1da2d8")) +
+  geom_point()+
+  labs(y="Salario mensual (actividad principal)",x="Edad",caption="En millones")+
+  theme_minimal()+
+  theme(legend.position="none")
+
+
+  #y_ingLab_m - all occ. 
+ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(y_ingLab_m/(1000000),na.rm = T)+sd(y_ingLab_m/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(y_ingLab_m/(1000000),na.rm = T),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(y_ingLab_m/(1000000),na.rm = T)-sd(y_ingLab_m/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Salario laboral mensual", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$y_ingLab_m/(1000000),na.rm = T)+sd(GEIH_2018$y_ingLab_m/(1000000),na.rm = T),2)),"= -1 sd"),
+                                "Media"=paste(as.character(round(mean(GEIH_2018$y_ingLab_m/(1000000),na.rm = T),2)),"= media"),
+                                "+sd"=paste(as.character(round(mean(GEIH_2018$y_ingLab_m/(1000000),na.rm = T)+sd(GEIH_2018$y_ingLab_m/(1000000),na.rm = T),2)),"= +1 sd")
+                     ))+
+  labs(x="Salario laboral mensual",y="densidad",caption="En millones")+
+  xlim(-1,40)+
+  theme_minimal()
+
+
+ingLab_point <- ggplot(GEIH_2018, aes(y=y_ingLab_m/(1000000),x=age, color="#1da2d8")) +
+  geom_point()+
+  labs(y="Salario laboral mensual",x="Edad", caption="En millones")+
+  theme_minimal()+
+  theme(legend.position="none")
 
   
-  #y_ingLab_m - all occ. 
-  ggplot(GEIH_2018, aes(x=y_ingLab_m))+
-    geom_histogram()
-  
-  ggplot(GEIH_2018, aes(y=y_ingLab_m,x=age, color=sex))+
-    geom_point()
-  
   #y_total_m - income salaried + independents total
-  ggplot(GEIH_2018, aes(x=y_total_m))+
-    geom_histogram()
-  
-  ggplot(GEIH_2018, aes(y=y_total_m,x=age, color=sex))+
-    geom_point()
-  
+y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T)+sd(y_total_m/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T)-sd(y_total_m/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Salario mensual + ingreso independientes", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T)+sd(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= -1 sd"),
+                                "Media"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= media"),
+                                "+sd"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T)+sd(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= +1 sd")
+                     ))+
+  labs(x="Salario mensual + ingreso independientes",y="densidad",caption="En millones")+
+  xlim(-1,40)+
+  theme_minimal()
+
+
+y_total_point <- ggplot(GEIH_2018, aes(y=y_total_m/(1000000),x=age, color="#1da2d8")) +
+  geom_point()+
+  labs(y="Salario mensual + ingreso independientes",x="Edad",caption="En millones")+
+  theme_minimal()+
+  theme(legend.position="none")
+
+
+
   
   #ingtot - 
-  ggplot(GEIH_2018, aes(x=ingtot))+
-    geom_histogram()
+y_ingtot_hist <- ggplot(GEIH_2018, aes(x=ingtot/(1000000))) +
+  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
+  geom_vline(aes(xintercept=mean(ingtot/(1000000),na.rm = T)+sd(ingtot/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
+  geom_vline(aes(xintercept=mean(ingtot/(1000000),na.rm = T),color="Media"), size=1)+
+  geom_vline(aes(xintercept=mean(ingtot/(1000000),na.rm = T)-sd(ingtot/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
+  scale_color_manual(name= "Ingreso total mensual", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222") 
+                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$ingtot/(1000000),na.rm = T)+sd(GEIH_2018$ingtot/(1000000),na.rm = T),2)),"= -1 sd"),
+                                "Media"=paste(as.character(round(mean(GEIH_2018$ingtot/(1000000),na.rm = T),2)),"= media"),
+                                "+sd"=paste(as.character(round(mean(GEIH_2018$ingtot/(1000000),na.rm = T)+sd(GEIH_2018$ingtot/(1000000),na.rm = T),2)),"= +1 sd")
+                     ))+
+  labs(x="Ingreso total mensual",y="densidad",caption="En millones")+
+  xlim(-2,40)+
+  theme_minimal()
+
+
+y_ingtot_point <- ggplot(GEIH_2018, aes(y=ingtot/(1000000),x=age, color="#1da2d8")) +
+  geom_point()+
+  labs(y="Ingreso total mensual",x="Edad", caption="En millones")+
+  theme_minimal()+
+  theme(legend.position="none")
+
+
+
+plot_grid(salary_hist,ingLab_hist,y_total_hist,y_ingtot_hist, ncol = 2, nrow = 2)
+plot_grid(salary_point,ingLab_point,y_total_point,y_ingtot_point, ncol = 2, nrow = 2)
+
+summary(GEIH_2018$y_salary_m)
+summary(GEIH_2018$y_ingLab_m)
+summary(GEIH_2018$y_total_m)
+summary(GEIH_2018$ingtot)
+
   
-  ggplot(GEIH_2018, aes(y=ingtot,x=age, color=sex))+
-    geom_point()
+GEIH_2018<- subset(GEIH_2018, filter=-c(relab_nan,regSalud_nan,cotPension_nan,dummy))
   
-  #ingtotob - 
-  ggplot(GEIH_2018, aes(x=ingtotob))+
-    geom_histogram()
-  
-  ggplot(GEIH_2018, aes(y=ingtotob,x=age, color=sex))+
-    geom_point()
-  
-  summary(GEIH_2018$y_salary_m)
-  summary(GEIH_2018$y_ingLab_m)
-  summary(GEIH_2018$y_total_m)
-  summary(GEIH_2018$ingtot)
-  summary(GEIH_2018$ingtotob)
   
   #### escogemos 2 preliminarmente y_ingLab_m y y_total_m
   
+GEIH_2018$scaled_y<-scale(GEIH_2018$y_total_m)
 
-ing <- model.matrix(as.formula("y_total_m~ a + b + c"), mydf)
+
+ing <- model.matrix(as.formula("y_total_m ~ a + b + c"), mydf)
   
-
+GEIH_2018_scaled = as.data.frame(scale(GEIH_2018, center = TRUE, scale = TRUE))
 
 #### Estandarización de los datos ####
 
