@@ -389,15 +389,6 @@ summary(GEIH_2018$ingtot)
   
 GEIH_2018<- subset(GEIH_2018, filter=-c(relab_nan,regSalud_nan,cotPension_nan,dummy))
   
-  
-  #### escogemos 2 preliminarmente y_ingLab_m y y_total_m
-  
-GEIH_2018$scaled_y<-scale(GEIH_2018$y_total_m)
-
-
-ing <- model.matrix(as.formula("y_total_m ~ a + b + c"), mydf)
-  
-GEIH_2018_scaled = as.data.frame(scale(GEIH_2018, center = TRUE, scale = TRUE))
 
 #### Estandarización de los datos ####
 
