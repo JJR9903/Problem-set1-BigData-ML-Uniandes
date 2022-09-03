@@ -60,7 +60,8 @@ head(GEIH_2018) # first 6 observations
 
 ##Filtrar por mayores de edad
 GEIH_2018<-GEIH_2018%>%
-  filter(GEIH_2018$age>18)
+  filter(GEIH_2018$age>18 & GEIH_2018$age<65)
+  filter(GEIH_2018$age<65)
 
 # eliminamos variables que salen tal cual como en la encuesta, pues hay otras variables construidas a partir de estas
 # con esto reducimos el tamaño de la base de 174 variables a 73  
@@ -406,24 +407,189 @@ skim_scaled=skim(GEIH_2018_scaled)
       ######### 2. Age-earnings profile ##########
 
 GEIH_2018$age2<-GEIH_2018$age^2
-#Nos quedamos con Ingtot
+#Nos quedamos con y_total_m y la estandarizamos
+GEIH_2018$scaled_y<-scale(GEIH_2018$y_total_m)
+summary(GEIH_2018$scaled_y)
+
+
+#por sexo para llenar missings
+
+GEIH_2018$sexualizandoando<-0
+GEIH_2018$sexo<-as.numeric(GEIH_2018$sex)
+
+
+ExcelFunctionsR::AVERAGEIFS(GEIH_2018$scaled_y,GEIH_2018$sexo,1)
+ExcelFunctionsR::AVERAGEIFS(GEIH_2018$scaled_y,GEIH_2018$sexo,2)
+
+
+GEIH_2018<-GEIH_2018%>%
+  mutate(sexualizandoando=case_when((is.na(scaled_y)==TRUE & sexo==1)~1.511169,
+                            (is.na(scaled_y)==TRUE & sexo==2)~1.103506,
+                            TRUE ~ 0))
+
+GEIH_2018$scaled_y[is.na(GEIH_2018$scaled_y)]<-GEIH_2018$sexualizandoando
+
+
  #Modelo 1.0
-model1<-lm(ingtot~age+age2,GEIH_2018)
+model1<-lm(scaled_y~age+age2,GEIH_2018)
+
+#tabla
+
+stargazer(model1,title="", out=file.path(getwd(),"/stores/model1.txt"),out.header = T)
+install.packages("car")
+library("car")
+plot(scaled_y~age, data=GEIH_2018)
+lines(lowess("GEIH_2018"),col="blue")
+
+lowess_b <- lowess(GEIH_2018$age, GEIH_2018$scaled_y)
+plot( lowess_b, type="c")
 
 
+plot(GEIH_2018$age, GEIH_2018$y_total_m)
+lines(lowess(GEIH_2018$age, GEIH_2018$y_total_m),col='red')  
 
-    ######### 3. Age-earnings profile ##########
+installed.packages(ggplot)
+ggplot(data=GEIH_2018,aes(x=age,y=y_total_m))+geom_point()+geom_smooth(method = "lm")
+
+##Intervalos 
+#Guardar betas 
+
+Coef1<- model1$coef
+Coef
+b0<-Coef1[1]
+b1<-Coef1[2]
+b2<-Coef1[3]
+
+#Derivando para encontrar el puto mx me interesa es b1 y b2 
+
+require("boot")
+
+#Defini la función que voy a usar 
+eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+f<-lm(scaled_y~age+age2,data=data,subset =index )
+coefs<-f$coefficients
+b1<-coefs[2]
+b2<-coefs[3]
+opt<-(-b1/(2*b2))
+return(opt)
+}
+
+eta.mod1.fn(GEIH_2018,1:1000)
+
+
+##desviación e intervalo 
+set.seed(50)
+eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+  f<-lm(scaled_y~age+age2,data=data,subset =index )
+  coefs<-f$coefficients
+  b1<-coefs[2]
+  b2<-coefs[3]
+  opt<-(-b1/(2*b2))
+  return(opt)
+}
+  
+bootcor<- boot (GEIH_2018, eta.mod1.fn,R=1000)
+summary (bootcor)
+
+lb<-44.572 -((1.96*0.60077)/sqrt(1000))
+lb
+######### 3. Age-earnings profile ##########
 
 
 #Ln de Ingtot 
-GEIH_2018$lning<-log(GEIH_2018$ingtot)
-GEIH_2018$lning[which(!is.finite(GEIH_2018$lning))] <- 0
+GEIH_2018$lning<-log(GEIH_2018$y_total_m)
 GEIH_2018$lning
 
+summary(GEIH_2018$lning)
+#########Arregloooooooooo
+
+vista<-GEIH_2018%>%
+  select(y_total_m,maxEducLevel,estrato1)
+
+vista<-vista%>%
+  drop_na()
+
+promedios<-tapply(vista$y_total_m,vista$maxEducLevel,mean)
+
+lnpromedios<-log(promedios)
+
+GEIH_2018$nuevoln<-1
+
+GEIH_2018<-GEIH_2018%>%
+  mutate(nuevoln=case_when(n_edu==1 ~ 13.27868,
+                           n_edu==2 ~ 0,
+                           n_edu==3 ~ 13.57817,
+                           n_edu==4 ~ 13.67374,
+                           n_edu==5 ~ 13.69189,
+                           n_edu==6 ~ 13.85868,
+                           n_edu==7 ~ 14.75243,
+                    TRUE~0))
+
+GEIH_2018$lning[is.na(GEIH_2018$lning)]<-GEIH_2018$nuevoln
+summary(GEIH_2018$lning)
 
 #MODELO 2.0
 #0 es mujer 
-model2<-lm(lning~sex==0,GEIH_2018)
 
+model2<-lm(lning~sex,GEIH_2018)
+
+##grafica 
+plot(scaled_y~age, data=GEIH_2018,group=sex, color=sex)
+lines(lowess("GEIH_2018"),col="blue")
+
+##Toca hacer las graficas y el intervalos!!!
+
+##intervalo con boot 
+set.seed(50)
+eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+  f<-lm(lning~sex,data=data,subset =index )
+  coefs<-f$coefficients
+  b1<-coefs[2]
+  b2<-coefs[3]
+  opt<-(-b1/(2*b2))
+  return(opt)
+}
+
+bootcor<- boot (GEIH_2018, eta.mod1.fn,R=1000)
+summary (bootcor)
+
+##MODELO CON CONTROLES 
+edad_educacion<-(GEIH_2018$n_edu* GEIH_2018$age)
+edad_sexo<-(GEIH_2018$age*GEIH_2018$sexo)
+edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
+
+model3<-lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+
+##MODELO CON WFL 
+require("tidyverse")
+require("fabricatr")
+
+reg1<-lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+stargazer(reg1,type="text")
+
+GEIH_2018$res_y_a<-1
+GEIH_2018$res_s_a<-1
+
+GEIH_2018<-GEIH_2018%>% 
+  mutate(res_y_a=lm(lning~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
+         res_s_a=lm(sex~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
+         )
+
+reg2<-lm(res_y_a~res_s_a-1,GEIH_2018)
+stargazer(reg1,reg2,type="text")
+
+
+#MODELO CON BOOT ##sacar el error 
+set.seed(50)
+eta.mod6.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+  f<--lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+  coefs<-f$coefficients
+  b1<-coefs[2]
+  b2<-coefs[3]
+  
+}
+
+bootreg<- boot (GEIH_2018, eta.mod6.fn,R=1000)
+summary (bootcor)
 
 
