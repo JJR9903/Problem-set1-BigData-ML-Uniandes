@@ -431,3 +431,38 @@ bootreg<- boot (GEIH_2018, eta.mod6.fn,R=1000)
 summary (bootcor)
 
 
+#4.
+#4.1
+#Partir la muestra
+install.packages("mcspatial")
+set.seed(10101)
+GEIH_2018 <- GEIH_2018 %>%
+         holdout= as.logical(1:nrow(GEIH_2018) %in%
+                               sample(nrow(GEIH_2018), nrow(GEIH_2018)*.3))
+                                  
+test<-GEIH_2018[GEIH_2018$holdout==T,]
+train<-GEIH_2018[GEIH_2018$holdout==F,]
+#4.2
+#Modelos
+GEIH_2018$lneduc<-ln(GEIH_2018$)
+mod_41<-ml(lning~age+age2+sex+lneduc,GEIH_2018)
+mod_42<-ml(lning~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
+mod_43<-ml(lning~age+sex+lneduc,GEIH_2018)
+mod_44<-ml(,GEIH_2018)
+mod_45<-ml(,GEIH_2018)
+
+#Resultados
+tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")
+
+#4.3 Efecto de observaciones
+**help!!
+  
+  
+# 4.4
+  mod_4<-lm(,data=train)
+test$mod_4<-predict(mod_4,newdata = test)
+with(test,mean(("varrespuesta"-mod_4)^2))
+
+mod_4<-lm(,data=train)
+test$mod_4<-predict(mod_4,newdata = test)
+with(test,mean(("varrespuesta"-mod_4)^2))
