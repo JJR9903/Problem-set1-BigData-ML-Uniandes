@@ -27,35 +27,37 @@ dir_set <- function(){
 dir_set()
 
 
-pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car)
+pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot)
 
 
         ##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
 
-problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
-
-GEIH_2018<- data.frame()
-for (url in problem_set_URL){
-  print(url)
-  df <- as.data.frame(read_html(url)%>%
-                        html_table())
-  GEIH_2018<-rbind(GEIH_2018,df)
+if ("GEIH_2018.RData"%in%list.files(path = "./stores")){
+  load("stores/GEIH_2018.RData")
+}else{
+  
+  problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
+  
+  GEIH_2018<- data.frame()
+  for (url in problem_set_URL){
+    print(url)
+    df <- as.data.frame(read_html(url)%>%
+                          html_table())
+    GEIH_2018<-rbind(GEIH_2018,df)
+    
+  }
+  
+  # save data in RData and csv files
+  save(GEIH_2018, file = "stores/GEIH_2018.RData")
+  write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
   
 }
-
-# save data in RData and csv files
-save(GEIH_2018, file = "stores/GEIH_2018.RData")
-write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
 
 
 
 
 
         ##### 1.a.2  Describe data #####
-
-#Loading data without web Scraping step
-load("stores/GEIH_2018.RData")
-
 
 #### Data Cleaning ####
 
@@ -660,15 +662,6 @@ scaled_y_hist <- ggplot(GEIH_2018, aes(x=scaled_y)) +
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
-scaled_y_point <- ggplot(GEIH_2018, aes(y=scaled_y,x=age, color="#1da2d8")) +
-  geom_point()+
-  labs(title = "ingreso actividad principal",y="ingreso monetario actividad principal",x="Edad",caption="En millones mensuales")+
-  theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-
 # scaled_impa
 impa_sclaed_hist <- ggplot(GEIH_2018, aes(x=scaled_impa)) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
@@ -687,83 +680,92 @@ impa_sclaed_hist <- ggplot(GEIH_2018, aes(x=scaled_impa)) +
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
 
-impa_sclaed_point <- ggplot(GEIH_2018, aes(y=scaled_impa,x=age, color="#1da2d8")) +
-  geom_point()+
-  labs(title = "ingreso actividad principal",y="ingreso monetario actividad principal",x="Edad",caption="En millones mensuales")+
-  theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-
-
-
 
 
 GEIH_2018$age2<-GEIH_2018$age^2
 
+
+
  ### Modelo 1.0 (scaled_y~age+age2)
-model1<-lm(scaled_y~age+age2,GEIH_2018)
+Model1.m <- subset(GEIH_2018, select = c(y_total_m,scaled_y,age,age2) )
+model1<-lm(scaled_y~age+age2,Model1.m)
 
 #tabla
 stargazer(model1,title="", out=file.path(getwd(),"/stores/model1.txt"),out.header = T)
-
-
-plot(scaled_y~age, data=GEIH_2018)
-lines(lowess("GEIH_2018"),col="blue")
-
-lowess_b <- lowess(GEIH_2018$age, GEIH_2018$scaled_y)
-plot( lowess_b, type="c")
-
-
-plot(GEIH_2018$age, GEIH_2018$y_total_m)
-lines(lowess(GEIH_2018$age, GEIH_2018$y_total_m),col='red')  
-
-installed.packages(ggplot)
-ggplot(data=GEIH_2018,aes(x=age,y=y_total_m))+geom_point()+geom_smooth(method = "lm")
-
+summary(model1)
 ##Intervalos 
 #Guardar betas 
-
 Coef1<- model1$coef
-Coef
 b0<-Coef1[1]
 b1<-Coef1[2]
 b2<-Coef1[3]
+#Derivando para encontrar el punto mx me interesa es b1 y b2 
+age_peak=-b1/(2*b2)
 
-#Derivando para encontrar el puto mx me interesa es b1 y b2 
 
-require("boot")
-
-#Defini la función que voy a usar 
-eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+#Definir la función de para el bootstrap
+set.seed(10101)
+beta.mod1<-function(data,index){
 f<-lm(scaled_y~age+age2,data=data,subset =index )
 coefs<-f$coefficients
-b1<-coefs[2]
-b2<-coefs[3]
-opt<-(-b1/(2*b2))
-return(opt)
+res <- f$residuals
+return(coefs)
+return(res)
 }
 
-eta.mod1.fn(GEIH_2018,1:1000)
-
-
-##desviación e intervalo 
-set.seed(50)
-eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
+res.mod1<-function(data,index){
   f<-lm(scaled_y~age+age2,data=data,subset =index )
-  coefs<-f$coefficients
-  b1<-coefs[2]
-  b2<-coefs[3]
-  opt<-(-b1/(2*b2))
-  return(opt)
+  res <- f$residuals
+  return(res)
 }
-  
-bootcor<- boot (GEIH_2018, eta.mod1.fn,R=1000)
-summary (bootcor)
 
-lb<-44.572 -((1.96*0.60077)/sqrt(1000))
-lb
-######### 3. Age-earnings profile ##########
+
+boot_beta<- boot (Model1.m, beta.mod1,R=1000)
+summary (boot_beta)
+boot_res<- boot (Model1.m, res.mod1,R=1000)
+summary (boot_res)
+
+b0_lwr <-boot.ci(boot_beta,type = "basic",index = 1)[[4]][[4]]
+b0_upr <-boot.ci(boot_beta,type = "basic",index = 1)[[4]][[5]]
+b1_lwr <-boot.ci(boot_beta,type = "basic",index = 2)[[4]][[4]]
+b1_upr <-boot.ci(boot_beta,type = "basic",index = 2)[[4]][[5]]
+b2_lwr <-boot.ci(boot_beta,type = "basic",index = 3)[[4]][[4]]
+b2_upr <-boot.ci(boot_beta,type = "basic",index = 3)[[4]][[5]]
+
+res_lwr <-boot.ci(boot_res,type = "basic")[[4]][[4]]
+res_upr <-boot.ci(boot_res,type = "basic")[[4]][[5]]
+
+Model1.m$y_fitted <- fitted(model1)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
+Model1.m$y_f_lw  <-predict(model1,interval='prediction')[,2]
+Model1.m$y_f_up  <-predict(model1,interval='prediction')[,3]
+
+
+Model1.m$y_fitted_lwr <- (b0_lwr + b1_lwr*Model1.m$age + b2_lwr*Model1.m$age2 + res_lwr)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
+Model1.m$y_fitted_upr <- (b0_upr + b1_upr*Model1.m$age + b2_upr*Model1.m$age2 + res_upr)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
+
+
+age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = scaled_y) ) +
+  geom_line(aes(y = y_fitted), size = 1)+
+  geom_line(aes(y = y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_line(aes(y = y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_ribbon( aes(ymin = y_fitted_lwr, ymax = y_fitted_upr), fill = "lightblue", alpha = .4)+
+  geom_ribbon( aes(ymin = y_f_lw, ymax = y_f_up), fill = "red", alpha = .4)+
+  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
+  scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
+                     , labels=c("ci"="ci",
+                                "y_hat"="y_hat"
+                     ))+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  
+ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m1)
+
+
+
+
+
+
+  ######### 3. Age-earnings profile ##########
 
 
 #Ln de Ingtot 
