@@ -686,12 +686,12 @@ GEIH_2018$age2<-GEIH_2018$age^2
 
 
 
- ### Modelo 1.0 (scaled_y~age+age2)
+ ### Modelo 1.0 (y_total_m~age+age2)
 Model1.m <- subset(GEIH_2018, select = c(y_total_m,scaled_y,age,age2) )
-model1<-lm(scaled_y~age+age2,Model1.m)
+model1<-lm(y_total_m~age+age2,Model1.m)
 
 #tabla
-stargazer(model1,title="", out=file.path(getwd(),"/stores/model1.txt"),out.header = T)
+stargazer(model1,title="", out=file.path(getwd(),"/views/model1.txt"),out.header = T)
 summary(model1)
 ##Intervalos 
 #Guardar betas 
@@ -705,46 +705,44 @@ age_peak=-b1/(2*b2)
 
 #Definir la función de para el bootstrap
 set.seed(10101)
-beta.mod1<-function(data,index){
-f<-lm(scaled_y~age+age2,data=data,subset =index )
+beta.m1<-function(data,index){
+f<-lm(y_total_m~age+age2,data=data,subset =index )
 coefs<-f$coefficients
-res <- f$residuals
 return(coefs)
-return(res)
 }
 
-res.mod1<-function(data,index){
-  f<-lm(scaled_y~age+age2,data=data,subset =index )
+res.m1<-function(data,index){
+  f<-lm(y_total_m~age+age2,data=data,subset =index )
   res <- f$residuals
   return(res)
 }
 
 
-boot_beta<- boot (Model1.m, beta.mod1,R=1000)
+boot_beta_m1<- boot (Model1.m, beta.m1,R=1000)
 summary (boot_beta)
-boot_res<- boot (Model1.m, res.mod1,R=1000)
+boot_res_m1<- boot (Model1.m, res.m1,R=1000)
 summary (boot_res)
 
-b0_lwr <-boot.ci(boot_beta,type = "basic",index = 1)[[4]][[4]]
-b0_upr <-boot.ci(boot_beta,type = "basic",index = 1)[[4]][[5]]
-b1_lwr <-boot.ci(boot_beta,type = "basic",index = 2)[[4]][[4]]
-b1_upr <-boot.ci(boot_beta,type = "basic",index = 2)[[4]][[5]]
-b2_lwr <-boot.ci(boot_beta,type = "basic",index = 3)[[4]][[4]]
-b2_upr <-boot.ci(boot_beta,type = "basic",index = 3)[[4]][[5]]
+b0_lwr <-boot.ci(boot_beta_m1,type = "basic",index = 1)[[4]][[4]]
+b0_upr <-boot.ci(boot_beta_m1,type = "basic",index = 1)[[4]][[5]]
+b1_lwr <-boot.ci(boot_beta_m1,type = "basic",index = 2)[[4]][[4]]
+b1_upr <-boot.ci(boot_beta_m1,type = "basic",index = 2)[[4]][[5]]
+b2_lwr <-boot.ci(boot_beta_m1,type = "basic",index = 3)[[4]][[4]]
+b2_upr <-boot.ci(boot_beta_m1,type = "basic",index = 3)[[4]][[5]]
 
-res_lwr <-boot.ci(boot_res,type = "basic")[[4]][[4]]
-res_upr <-boot.ci(boot_res,type = "basic")[[4]][[5]]
+res_lwr <-boot.ci(boot_res_m1,type = "basic")[[4]][[4]]
+res_upr <-boot.ci(boot_res_m1,type = "basic")[[4]][[5]]
 
-Model1.m$y_fitted <- fitted(model1)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
+Model1.m$y_fitted <- fitted(model1)
 Model1.m$y_f_lw  <-predict(model1,interval='prediction')[,2]
 Model1.m$y_f_up  <-predict(model1,interval='prediction')[,3]
 
 
-Model1.m$y_fitted_lwr <- (b0_lwr + b1_lwr*Model1.m$age + b2_lwr*Model1.m$age2 + res_lwr)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
-Model1.m$y_fitted_upr <- (b0_upr + b1_upr*Model1.m$age + b2_upr*Model1.m$age2 + res_upr)#*sd(Model1.m$y_total_m)+mean(Model1.m$y_total_m)
+Model1.m$y_fitted_lwr <- (b0_lwr + b1_lwr*Model1.m$age + b2_lwr*Model1.m$age2 + res_lwr)
+Model1.m$y_fitted_upr <- (b0_upr + b1_upr*Model1.m$age + b2_upr*Model1.m$age2 + res_upr)
 
 
-age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = scaled_y) ) +
+age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = y_total_m) ) +
   geom_line(aes(y = y_fitted), size = 1)+
   geom_line(aes(y = y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
   geom_line(aes(y = y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
@@ -767,47 +765,110 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 
   ######### 3. Age-earnings profile ##########
 
-
-#Ln de Ingtot 
-GEIH_2018$lning<-log(GEIH_2018$y_total_m)
-GEIH_2018$lning
-
-summary(GEIH_2018$lning)
-#########Arregloooooooooo
-
-vista<-GEIH_2018%>%
-  select(y_total_m,maxEducLevel,estrato1)
-
-vista<-vista%>%
-  drop_na()
-
-promedios<-tapply(vista$y_total_m,vista$maxEducLevel,mean)
-
-lnpromedios<-log(promedios)
-
-GEIH_2018$nuevoln<-1
-
+#Ln de y_total_m 
+GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018<-GEIH_2018%>%
-  mutate(nuevoln=case_when(n_edu==1 ~ 13.27868,
-                           n_edu==2 ~ 0,
-                           n_edu==3 ~ 13.57817,
-                           n_edu==4 ~ 13.67374,
-                           n_edu==5 ~ 13.69189,
-                           n_edu==6 ~ 13.85868,
-                           n_edu==7 ~ 14.75243,
-                    TRUE~0))
+  mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
+summary(GEIH_2018$ln_y)
+source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+crosstab(GEIH_2018,row.vars = "Mujer",col.vars = "sex")
 
-GEIH_2018$lning[is.na(GEIH_2018$lning)]<-GEIH_2018$nuevoln
-summary(GEIH_2018$lning)
+#MODELO 2.0 (ln_y~sex)
+Model2.m <- subset(GEIH_2018, select = c(ln_y,Mujer) )
+model2<-lm(ln_y~Mujer,Model2.m)
 
-#MODELO 2.0
-#0 es mujer 
+stargazer(model2,title="", out=file.path(getwd(),"/views/model2.txt"),out.header = T)
+summary(model2)
 
-model2<-lm(lning~sex,GEIH_2018)
+#MODELO 2.1 (ln_y~sex+age+age2)
+Model2.1.m <- subset(GEIH_2018, select = c(ln_y,Mujer,age,age2) )
+model2.1<-lm(ln_y~age+age2+Mujer,Model2.1.m)
+summary(model2.1)
+
+Coef<- model2.1$coef
+b0<-Coef[1]
+b1<-Coef[2]
+b2<-Coef[3]
+b3<-Coef[4]
+res<-model2.1$residuals
+
+Model2.1.m$ln_y_fitted_H <- b0 + b1*Model2.1.m$age + b2*Model2.1.m$age2 + res
+Model2.1.m$ln_y_fitted_M <- b0 + b1*Model2.1.m$age + b2*Model2.1.m$age2 + b3*Model2.1.m$Mujer + res
+Model2.1.m$ln_y_f_lw  <-predict(model2.1,interval='prediction')[,2]
+Model2.1.m$ln_y_f_up  <-predict(model2.1,interval='prediction')[,3]
+
+
+#Derivando para encontrar el punto mx me interesa es b1 y b2 
+age_peak=-b1/(2*b2)
 
 ##grafica 
-plot(scaled_y~age, data=GEIH_2018,group=sex, color=sex)
-lines(lowess("GEIH_2018"),col="blue")
+beta.m2.1<-function(data,index){
+  f<-lm(ln_y~age+age2+Mujer,data=data,subset =index )
+  coefs<-f$coefficients
+  return(coefs)
+}
+
+res.m2.1<-function(data,index){
+  f<-lm(ln_y~age+age2+Mujer,data=data,subset =index )
+  res <- f$residuals
+  return(res)
+}
+
+boot_beta_m2.1<- boot (Model2.1.m, beta.m2.1,R=1000)
+summary (boot_beta)
+boot_res_m2.1<- boot (Model2.1.m, res.m2.1,R=1000)
+summary (boot_res)
+
+b0_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[4]]
+b0_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[5]]
+b1_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 2)[[4]][[4]]
+b1_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 2)[[4]][[5]]
+b2_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 3)[[4]][[4]]
+b2_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 3)[[4]][[5]]
+b3_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 4)[[4]][[4]]
+b3_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 4)[[4]][[5]]
+
+res_lwr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[4]]
+res_upr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[5]]
+
+
+
+Model2.1.m$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*Model2.1.m$age + b2_lwr*Model2.1.m$age2 + b3_lwr*Model2.1.m$Mujer+ res_lwr)
+Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.m$age2 + b3_upr*Model2.1.m$Mujer+ res_upr)
+
+#age_earningsProfile_m2.1 <-
+ ggplot(Model2.1.m, aes(x = age, y = ln_y) ) +
+  geom_line(aes(y = ln_y_fitted_H), size = 1)
+  geom_line(aes(y = ln_y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_line(aes(y = ln_y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_ribbon( aes(ymin = ln_y_fitted_lwr, ymax = ln_y_fitted_upr), fill = "lightblue", alpha = .4)+
+  geom_ribbon( aes(ymin = ln_y_f_lw, ymax = ln_y_f_up), fill = "red", alpha = .4)+
+  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
+  scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
+                     , labels=c("ci"="ci",
+                                "y_hat"="y_hat"
+                     ))+
+  theme_light()+
+  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+
+ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m1)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 ##Toca hacer las graficas y el intervalos!!!
 
