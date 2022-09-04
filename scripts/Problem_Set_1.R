@@ -10,7 +10,6 @@
 rm(list=ls())
 
 
-
 # este setwd por ahora no esta funcionando, toca que cada uno lo haga independiente mientras logro que funcione. att: Juan Jose
 dir_set <- function(){
   if(Sys.info()["user"]=="JuanJose"){
@@ -633,15 +632,12 @@ skim=skim(GEIH_2018)
 
 
 
-
-
       ######### 2. Age-earnings profile ##########
 
 #Nos quedamos con y_total_m y la estandarizamos
 GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 
 GEIH_2018$age2<-GEIH_2018$age^2
-
 
 
  ### Modelo 1.0 (ln_y~age+age2)
@@ -772,9 +768,7 @@ res.m2.1<-function(data,index){
 }
 
 boot_beta_m2.1<- boot (Model2.1.m, beta.m2.1,R=1000)
-summary (boot_beta)
 boot_res_m2.1<- boot (Model2.1.m, res.m2.1,R=1000)
-summary (boot_res)
 
 b0_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[4]]
 b0_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[5]]
@@ -793,12 +787,11 @@ res_upr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[5]]
 Model2.1.m$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*Model2.1.m$age + b2_lwr*Model2.1.m$age2 + b3_lwr*Model2.1.m$Mujer+ res_lwr)
 Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.m$age2 + b3_upr*Model2.1.m$Mujer+ res_upr)
 
-#age_earningsProfile_m2.1 <-
- ggplot(Model2.1.m, aes(x = age, y = ln_y) ) +
+#age_earningsProfile_m2.1 <- ggplot(Model2.1.m, aes(x = age, y = ln_y) ) +
   geom_line(aes(y = ln_y_fitted_H), size = 1)
-  geom_line(aes(y = ln_y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_line(aes(y = ln_y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_ribbon( aes(ymin = ln_y_fitted_lwr, ymax = ln_y_fitted_upr), fill = "lightblue", alpha = .4)+
+  geom_line(aes(y = Model2.1.m$ln_y_fitted_lwr ,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_line(aes(y = Model2.1.m$ln_y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
+  geom_ribbon( aes(ymin = Model2.1.m$ln_y_fitted_lwr, ymax = Model2.1.m$ln_y_fitted_upr, fill = "lightblue", alpha = .4)+
   geom_ribbon( aes(ymin = ln_y_f_lw, ymax = ln_y_f_up), fill = "red", alpha = .4)+
   labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
   scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
@@ -812,43 +805,14 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-##Toca hacer las graficas y el intervalos!!!
-
-##intervalo con boot 
-set.seed(50)
-eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
-  f<-lm(ln_y~sex,data=data,subset =index )
-  coefs<-f$coefficients
-  b1<-coefs[2]
-  b2<-coefs[3]
-  opt<-(-b1/(2*b2))
-  return(opt)
-}
-
-bootcor<- boot (GEIH_2018, eta.mod1.fn,R=1000)
-summary (bootcor)
-
 ##MODELO CON CONTROLES 
 edad_educacion<-(GEIH_2018$n_edu* GEIH_2018$age)
 edad_sexo<-(GEIH_2018$age*GEIH_2018$sexo)
 edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
 
-model3<-lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+Model3.m.c <-  subset(GEIH_2018, select = c(edad_educacion, edad_sexo,edad_estrato))
+
+model3<-lm(ln_y~sex+age+estrato1+maxEducLevel, Model3.m.c)
 
 ##MODELO CON WFL 
 require("tidyverse")
