@@ -88,7 +88,7 @@ Posteriormente, se procede a
 
 ##2.Edad e Ingreso
 
-La base de datos cuenta con numerosas variables de ingreso, estas están desagregadas por tipo de ingreso. Para escoger una se decidió ver cuáles tenían menos missing values, posterior a ello se identificó que la variable _ingtot_, referente al ingreso total no tenía missing values y contenía información de la variable de ingreso total observado y demás ingresos, dando una buena aproximación del poder adquisitivo al que accede un individuo por distintos conceptos, laborales, pensiones, rentas, etc.
+La base de datos cuenta con numerosas variables de ingreso, estas están desagregadas por tipo de ingreso. Entre ellas se buscó una variable que tuviera una construcción robusta sobre los ingresos, donde el salario fuera implicado para los fines de este trabajo. Con base en ello se encontró la variable y_total_m, la cual cuenta con un porcentaje significativo de missing values. Esta variable se estandarizó para centrar su distribución y para completar los missing values se recurrió a rellenarlos con una estratificación por sexo, de tal manera que los hombres con esta variable en missing tuvieran un ingreso asignado igual al promedio del ingreso de los hombres de la base, y para las mujeres, que ellas tuvieran un promedio para el ingreso de las mujeres. 
 
 Posteriormente, se corrió el modelo:
     $Ingreso=\beta_0 + \beta_1*Edad + \beta_2*Edad^2+ u$
@@ -101,6 +101,8 @@ tab_model(model1, file="model1.html")
 ```
 
  El coeficiente $\beta_1$ es positivo, lo que indica que un año de edad incrementa marginalmente el ingreso de un individuo mayor de 18 años. De modo contrario, el coeficiente $\beta_2$ tiene un signo negativo, indicando que existe una concavidad en la función polinómica de segundo grado, tal que se puede encontrar un punto máximo del ingreso en función de la edad. Finalmente, el coeficiente $\beta_0$ es negativo, para poder analizar este estimador se debe tener en cuenta que la variable _age_ tiene un mínimo en 19, por lo que no es que haya un ingreso base negativo, sino que como la edad comienza en un valor positivo, este intercepto nunca tomará el valor del ingreso en una estimación de variable dependiente, sino que será una parte de ajuste del modelo a los datos teniendo en cuenta los otros dos estimadores.
+ 
+ Posteriormente, se analizó que la teoría indica que hay un máximo en el ingreso alrededor de los 50 años, y al realizar la optimización algebráica con los parámetros de la estimación e implementar bootstrap para determinar un intervalo de confianza, se puede evidenciar que, con la información de la base de datos y el modelo planteado, con un 95% de confianza, la edad que maximiza el ingreso de los individuos se encuentre entre el siguiente intervalo.
  
  
  
