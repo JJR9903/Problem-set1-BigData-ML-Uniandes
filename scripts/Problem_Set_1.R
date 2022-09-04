@@ -638,57 +638,15 @@ skim=skim(GEIH_2018)
       ######### 2. Age-earnings profile ##########
 
 #Nos quedamos con y_total_m y la estandarizamos
-GEIH_2018$scaled_y<-scale(GEIH_2018$y_total_m)[,1]
-GEIH_2018$scaled_impa<-scale(GEIH_2018$impa)[,1]
-summary(GEIH_2018$scaled_y)
-summary(GEIH_2018$scaled_impa)
-
-
-
-# scaled_y
-scaled_y_hist <- ggplot(GEIH_2018, aes(x=scaled_y)) +
-  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
-  geom_vline(aes(xintercept=mean(scaled_y,na.rm = T)+sd(scaled_y,na.rm = T),color="-sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(scaled_y,na.rm = T),color="Media"), size=1)+
-  geom_vline(aes(xintercept=mean(scaled_y,na.rm = T)-sd(scaled_y,na.rm = T),color="+sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222","missings"="#ffffff") 
-                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$scaled_y,na.rm = T)-sd(GEIH_2018$scaled_y,na.rm = T),2)),"= -1 sd"),
-                                "Media"=paste(as.character(round(mean(GEIH_2018$scaled_y,na.rm = T),2)),"= media"),
-                                "+sd"=paste(as.character(round(mean(GEIH_2018$scaled_y,na.rm = T)+sd(GEIH_2018$scaled_y,na.rm = T),2)),"= +1 sd"),
-                                "missings"=paste(as.character(sum(is.na(GEIH_2018$scaled_y))),"missings")
-                     ))+
-  labs(title = "ingreso actividad principal",x="ingreso monetario actividad principal",y="densidad",caption="En millones mensuales")+
-  xlim(-1,30)+
-  theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-# scaled_impa
-impa_sclaed_hist <- ggplot(GEIH_2018, aes(x=scaled_impa)) +
-  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
-  geom_vline(aes(xintercept=mean(scaled_impa,na.rm = T)+sd(scaled_impa,na.rm = T),color="-sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(scaled_impa,na.rm = T),color="Media"), size=1)+
-  geom_vline(aes(xintercept=mean(scaled_impa,na.rm = T)-sd(scaled_impa,na.rm = T),color="+sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222","missings"="#ffffff") 
-                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$scaled_impa,na.rm = T)-sd(GEIH_2018$scaled_impa,na.rm = T),2)),"= -1 sd"),
-                                "Media"=paste(as.character(round(mean(GEIH_2018$scaled_impa,na.rm = T),2)),"= media"),
-                                "+sd"=paste(as.character(round(mean(GEIH_2018$scaled_impa,na.rm = T)+sd(GEIH_2018$scaled_impa,na.rm = T),2)),"= +1 sd"),
-                                "missings"=paste(as.character(sum(is.na(GEIH_2018$scaled_impa))),"missings")
-                     ))+
-  labs(title = "ingreso actividad principal",x="ingreso monetario actividad principal",y="densidad",caption="En millones mensuales")+
-  xlim(-1,30)+
-  theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-
+GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 
 GEIH_2018$age2<-GEIH_2018$age^2
 
 
 
- ### Modelo 1.0 (y_total_m~age+age2)
-Model1.m <- subset(GEIH_2018, select = c(y_total_m,scaled_y,age,age2) )
-model1<-lm(y_total_m~age+age2,Model1.m)
+ ### Modelo 1.0 (ln_y~age+age2)
+Model1.m <- subset(GEIH_2018, select = c(y_total_m,ln_y,age,age2) )
+model1<-lm(ln_y~age+age2,Model1.m)
 
 #tabla
 stargazer(model1,title="", out=file.path(getwd(),"/views/model1.txt"),out.header = T)
@@ -706,13 +664,13 @@ age_peak=-b1/(2*b2)
 #Definir la función de para el bootstrap
 set.seed(10101)
 beta.m1<-function(data,index){
-f<-lm(y_total_m~age+age2,data=data,subset =index )
+f<-lm(ln_y~age+age2,data=data,subset =index )
 coefs<-f$coefficients
 return(coefs)
 }
 
 res.m1<-function(data,index){
-  f<-lm(y_total_m~age+age2,data=data,subset =index )
+  f<-lm(ln_y~age+age2,data=data,subset =index )
   res <- f$residuals
   return(res)
 }
@@ -742,7 +700,7 @@ Model1.m$y_fitted_lwr <- (b0_lwr + b1_lwr*Model1.m$age + b2_lwr*Model1.m$age2 + 
 Model1.m$y_fitted_upr <- (b0_upr + b1_upr*Model1.m$age + b2_upr*Model1.m$age2 + res_upr)
 
 
-age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = y_total_m) ) +
+age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = ln_y) ) +
   geom_line(aes(y = y_fitted), size = 1)+
   geom_line(aes(y = y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
   geom_line(aes(y = y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
@@ -766,7 +724,6 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
   ######### 3. Age-earnings profile ##########
 
 #Ln de y_total_m 
-GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018<-GEIH_2018%>%
   mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
 summary(GEIH_2018$ln_y)
@@ -875,7 +832,7 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 ##intervalo con boot 
 set.seed(50)
 eta.mod1.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
-  f<-lm(lning~sex,data=data,subset =index )
+  f<-lm(ln_y~sex,data=data,subset =index )
   coefs<-f$coefficients
   b1<-coefs[2]
   b2<-coefs[3]
@@ -891,20 +848,20 @@ edad_educacion<-(GEIH_2018$n_edu* GEIH_2018$age)
 edad_sexo<-(GEIH_2018$age*GEIH_2018$sexo)
 edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
 
-model3<-lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+model3<-lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
 
 ##MODELO CON WFL 
 require("tidyverse")
 require("fabricatr")
 
-reg1<-lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+reg1<-lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
 stargazer(reg1,type="text")
 
 GEIH_2018$res_y_a<-1
 GEIH_2018$res_s_a<-1
 
 GEIH_2018<-GEIH_2018%>% 
-  mutate(res_y_a=lm(lning~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
+  mutate(res_y_a=lm(ln_y~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
          res_s_a=lm(sex~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
          )
 
@@ -915,7 +872,7 @@ stargazer(reg1,reg2,type="text")
 #MODELO CON BOOT ##sacar el error 
 set.seed(50)
 eta.mod6.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
-  f<--lm(lning~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
+  f<--lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
   coefs<-f$coefficients
   b1<-coefs[2]
   b2<-coefs[3]
@@ -939,12 +896,14 @@ test<-GEIH_2018[GEIH_2018$holdout==T,]
 train<-GEIH_2018[GEIH_2018$holdout==F,]
 #4.2
 #Modelos
-GEIH_2018$lneduc<-ln(GEIH_2018$)
-mod_41<-ml(lning~age+age2+sex+lneduc,GEIH_2018)
-mod_42<-ml(lning~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
-mod_43<-ml(lning~age+sex+lneduc,GEIH_2018)
-mod_44<-ml(,GEIH_2018)
-mod_45<-ml(,GEIH_2018)
+GEIH_2018$lneduc<-ln(GEIH_2018)
+mod_41<-ml(ln_y~age+age2+sex+lneduc,GEIH_2018)
+mod_42<-ml(ln_y~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
+mod_43<-ml(ln_y~+age+age2+age*sex+lneduc,GEIH_2018)
+mod_43<-ml(ln_y~+age+age2+age*sex+sex*maxeduclevel+regSalud,GEIH_2018)
+mod_44<-ml(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,GEIH_2018)
+mod_45<-ml(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab*formal+cuentaPropia+sizefirm+cuentaPropia*sizefirm,GEIH_2018)
+
 
 #Resultados
 tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")
