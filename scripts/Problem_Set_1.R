@@ -889,34 +889,78 @@ summary (bootcor)
 install.packages("mcspatial")
 set.seed(10101)
 GEIH_2018 <- GEIH_2018 %>%
-         holdout= as.logical(1:nrow(GEIH_2018) %in%
+        mutate(holdout= as.logical(1:nrow(GEIH_2018) %in%
                                sample(nrow(GEIH_2018), nrow(GEIH_2018)*.3))
-                                  
+        )
 test<-GEIH_2018[GEIH_2018$holdout==T,]
 train<-GEIH_2018[GEIH_2018$holdout==F,]
 #4.2
+#Nuevas variables
+GEIH_2018$lneduc<-log(as.numeric(GEIH_2018$maxEducLevel))
+GEIH_2018$sex_age<-as.numeric(GEIH_2018$sex)*GEIH_2018$age
+GEIH_2018$sex_ed<-as.numeric(GEIH_2018$sex)*as.numeric(GEIH_2018$maxEducLevel)
+GEIH_2018$hwork2<-(GEIH_2018$totalHoursWorked)^2 
+GEIH_2018$sizefirm<-as.numeric(GEIH_2018$sizeFirm)
+GEIH_2018$propiasizefirm<-as.numeric(GEIH_2018$cuentaPropia)*GEIH_2018$sizefirm
+GEIH_2018$relab_formal<-as.numeric(GEIH_2018$relab)*as.numeric(GEIH_2018$formal)
 #Modelos
-GEIH_2018$lneduc<-ln(GEIH_2018)
-mod_41<-ml(ln_y~age+age2+sex+lneduc,GEIH_2018)
-mod_42<-ml(ln_y~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
-mod_43<-ml(ln_y~+age+age2+age*sex+lneduc,GEIH_2018)
-mod_43<-ml(ln_y~+age+age2+age*sex+sex*maxeduclevel+regSalud,GEIH_2018)
-mod_44<-ml(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,GEIH_2018)
-mod_45<-ml(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab*formal+cuentaPropia+sizefirm+cuentaPropia*sizefirm,GEIH_2018)
+mod_41<-lm(ln_y~age+age2+sex+lneduc,GEIH_2018)
+mod_42<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
+mod_43<-lm(ln_y~+age+age2+sex_age+lneduc,GEIH_2018)
+mod_44<-lm(ln_y~+age+age2+sex_age+sex_ed+regSalud,GEIH_2018)
+mod_45<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,GEIH_2018)
+mod_46<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab*formal+cuentaPropia+sizefirm+cuentaPropia*sizefirm,GEIH_2018)
 
 
 #Resultados
 tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")
 
-#4.3 Efecto de observaciones
-**help!!
-  
-  
-# 4.4
-  mod_4<-lm(,data=train)
-test$mod_4<-predict(mod_4,newdata = test)
-with(test,mean(("varrespuesta"-mod_4)^2))
+#Poder predictivo
+mod_41<-lm(ln_y~sex-1,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse1<-summary(test$se)[4]
 
-mod_4<-lm(,data=train)
-test$mod_4<-predict(mod_4,newdata = test)
-with(test,mean(("varrespuesta"-mod_4)^2))
+
+mod_41<-lm(ln_y~age+age2,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse2<-summary(test$se)[4]
+
+
+mod_41<-lm(ln_y~age+age2+sex,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse3<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~age+age2+sex+lneduc,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse4<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse5<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~+age+age2+sex_age+lneduc,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse6<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~+age+age2+sex_age+sex_ed+regSalud,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse7<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse8<-summary(test$se)[4]
+
+mod_41<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab_formal+cuentaPropia+sizefirm+propiasizefirm,data=train)
+test$mod_41<-predict(mod_41,newdata = test)
+test$se<-(test$ln_y-test$mod_41)^2
+mse9<-summary(test$se)[4]
+
+
