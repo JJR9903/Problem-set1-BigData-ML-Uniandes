@@ -27,7 +27,7 @@ dir_set <- function(){
 dir_set()
 
 
-pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot)
+pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot,caret,randomForest )
 
 
         ##### 1.a Web Scraping data set (GEIH 2018 - BogotÃ¡) ####
@@ -962,5 +962,29 @@ mod_41<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+forma
 test$mod_41<-predict(mod_41,newdata = test)
 test$se<-(test$ln_y-test$mod_41)^2
 mse9<-summary(test$se)[4]
+
+table(mse1, mse2, mse3, mse4, mse5, mse6, mse7, mse8, mse9)
+
+saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
+
+GEIH_2018<-readRDS(file =paste0(getwd(),"/GEIH_2018_4.rds"))
+
+##4.4 Validación cruzada
+# Se usan los modelos 5 y 7 porque son los que tienen menor error 
+
+#Llenar missing de educacion
+GEIH_2018$maxEducLevel[is.na(GEIH_2018$maxEducLevel)] <- "1"
+
+model1<-caret::train(ln_y~age+age2+sex+estrato1+maxEducLevel,
+              data=GEIH_2018, trControl=caret::trainControl(method="cv",number=nrow(GEIH_2018)))
+
+
+
+model2<-caret::train(ln_y~+age+age2+sex_age+sex_ed+regSalud,
+                     data=GEIH_2018, trControl=caret::trainControl(method="cv",number=nrow(GEIH_2018)))
+
+
+install.packages("randomForest")
+install.packages("caret")
 
 
