@@ -679,11 +679,9 @@ summary(model2)
 
 
 #MODELO 2.1 (ln_y~sex+age+age2)
-####### OJO TODAVIA NO ESTA  ######
 Model2.1.m <- subset(GEIH_2018, select = c(ln_y,Mujer,age,age2) )
 model2.1<-lm(ln_y~age+age2+Mujer,Model2.1.m)
 summary(model2.1)
-
 Coef<- model2.1$coef
 b0<-Coef[1]
 b1<-Coef[2]
@@ -691,42 +689,19 @@ b2<-Coef[3]
 b3<-Coef[4]
 res<-model2.1$residuals
 
-Model2.1.m$ln_y_fitted_H <- b0 + b1*Model2.1.m$age + b2*Model2.1.m$age2 + res
-Model2.1.m$ln_y_fitted_M <- b0 + b1*Model2.1.m$age + b2*Model2.1.m$age2 + b3*Model2.1.m$Mujer + res
-Model2.1.m$ln_y_f_lw  <-predict(model2.1,interval='prediction')[,2]
-Model2.1.m$ln_y_f_up  <-predict(model2.1,interval='prediction')[,3]
-
-
 #Derivando para encontrar el punto mx me interesa es b1 y b2 
 age_peak=-b1/(2*b2)
 
-##grafica 
-beta.m2.1<-function(data,index){
-  f<-lm(ln_y~age+age2+Mujer,data=data,subset =index )
-  coefs<-f$coefficients
-  return(coefs)
-}
+b_ci<-confint(model2.1)
+b0_lwr<-b_ci[1,1]
+b0_upr<-b_ci[1,2]
+b1_lwr<-b_ci[2,1]
+b1_upr<-b_ci[2,2]
+b2_lwr<-b_ci[3,1]
+b2_upr<-b_ci[3,2]
+b3_lwr<-b_ci[4,1]
+b4_upr<-b_ci[4,2]
 
-res.m2.1<-function(data,index){
-  f<-lm(ln_y~age+age2+Mujer,data=data,subset =index )
-  res <- f$residuals
-  return(res)
-}
-
-boot_beta_m2.1<- boot (Model2.1.m, beta.m2.1,R=1000)
-boot_res_m2.1<- boot (Model2.1.m, res.m2.1,R=1000)
-
-b0_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[4]]
-b0_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 1)[[4]][[5]]
-b1_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 2)[[4]][[4]]
-b1_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 2)[[4]][[5]]
-b2_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 3)[[4]][[4]]
-b2_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 3)[[4]][[5]]
-b3_lwr <-boot.ci(boot_beta_m2.1,type = "basic",index = 4)[[4]][[4]]
-b3_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 4)[[4]][[5]]
-
-res_lwr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[4]]
-res_upr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[5]]
 
 M2_M<-data.frame(
   "age" = min(Model2.1.m$age):max(Model2.1.m$age))
@@ -737,10 +712,10 @@ M2_H$Mujer = 0
 M2= rbind(M2_H,M2_M)
 M2$age2<-M2$age^2
 M2$ln_y_fitted <- (b0 + b1*M2$age + b2*M2$age2 + b3*M2$Mujer+ mean(res))
-M2$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*M2$age + b2_lwr*M2$age2 + b3_lwr*M2$Mujer+ res_lwr)
-M2$ln_y_fitted_upr <- (b0_upr + b1_upr*M2$age + b2_upr*M2$age2 + b3_upr*M2$Mujer+ res_upr)
+M2$res= mean(res)
+M2$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*M2$age + b2_lwr*M2$age2 + b3_lwr*M2$Mujer+ M2$res)
+M2$ln_y_fitted_upr <- (b0_upr + b1_upr*M2$age + b2_upr*M2$age2 + b3_upr*M2$Mujer+ M2$res)
 M2$Mujer<-as.factor(M2$Mujer)
-
 
 age_earningsProfile_m2.1 <-ggplot(M2, aes(x = age, y = ln_y_fitted) ) +
   geom_line(aes(y = ln_y_fitted,group=Mujer,color=Mujer), size = 1 )+
@@ -754,61 +729,82 @@ age_earningsProfile_m2.1 <-ggplot(M2, aes(x = age, y = ln_y_fitted) ) +
 
 ggsave("views/age_earningsProfile_m2.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m2.1)
 
-
+ic_mean<-M2%>%
+  group_by(Mujer)%>%
+  summarise(lwr=mean(ln_y_fitted_lwr),
+            upr=mean(ln_y_fitted_upr),
+            y=mean(ln_y_fitted))
 
 
 ##MODELO CON CONTROLES 
 
-edad_educacion<-(GEIH_2018$educacion*GEIH_2018$age)
-edad_sexo<-(GEIH_2018$age*GEIH_2018$Mujer)
-edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
+# Long 
+GEIH_2018$Mujer_age<-GEIH_2018$Mujer*GEIH_2018$age
+GEIH_2018<-GEIH_2018%>%mutate(Mujer_ed = ifelse(test = GEIH_2018$Mujer==1,yes = GEIH_2018$maxEducLevel,no = "0"))
 
+Model3.m.c <- subset(GEIH_2018, select = c(ln_y,Mujer,age,age2,Mujer_age,maxEducLevel,estrato1,oficio) )
+model3<-lm(ln_y~Mujer+age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age, Model3.m.c)
 
-model3<-lm(ln_y~sex+age+estrato1+maxEducLevel+edad_educacion+edad_estrato+edad_sexo, Model3.m.c)
-
-##MODELO CON WFL 
+## FWL  
 require("tidyverse")
 require("fabricatr")
 
-reg1<-lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
-stargazer(reg1,type="text")
+#GEIH_2018$res_y_a<-1
+#GEIH_2018$res_s_a<-1
 
-GEIH_2018$res_y_a<-1
-GEIH_2018$res_s_a<-1
+reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,Model3.m.c)
+reg1_res<-reg1$residuals
+reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,Model3.m.c)
+reg2_res<-reg2$residuals
 
-GEIH_2018<-GEIH_2018%>% 
-  res_y_a=lm(ln_y~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
-  res_s_a=lm(sex~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
-         
-
-reg2<-lm(res_y_a~res_s_a-1,GEIH_2018)
-stargazer(model1,title="fwl", out=file.path(getwd(),"/views/FWL.txt"),out.header = T, type = "text")
+Model3.m.c<-Model3.m.c%>% 
+  mutate(res_y_a=reg1_res,res_s_a=reg2_res)
+  
+reg_FWL<-lm(res_y_a~res_s_a-1,Model3.m.c)
 
 
 #MODELO CON BOOT ##sacar el error 
-set.seed(1000)
-eta.mod6.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
-  f<--lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
-  coefs<-f$coefficients
-  b1<-coefs[2]
-  b2<-coefs[3]
-  res <- f$residuals
-  return(res)
+set.seed(10101)
+beta.mod3_3.fn<-function(data,index){
+  reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg1_res<-reg1$residuals
+  reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg2_res<-reg2$residuals
+  
+  data<-data%>% 
+    mutate(res_y_a=reg1_res,res_s_a=reg2_res)
+  
+  reg_FWL<-lm(res_y_a~res_s_a-1,data,subset =index )
+  coefs<-reg_FWL$coefficients
+  return(coefs)
 }
-bootbeta<- boot (GEIH_2018, eta.mod6.fn,R=1000)
-
-b0_lwr <-boot.ci(bootbeta,type = "basic",index = 1)[[4]][[4]]
-b0_upr <-boot.ci(bootbeta,type = "basic",index = 1)[[4]][[5]]
-b1_lwr <-boot.ci(bootbeta,type = "basic",index = 2)[[4]][[4]]
-b1_upr <-boot.ci(bootbeta,type = "basic",index = 2)[[4]][[5]]
-b2_lwr <-boot.ci(bootbeta,type = "basic",index = 3)[[4]][[4]]
-b2_upr <-boot.ci(bootbeta,type = "basic",index = 3)[[4]][[5]]
 
 
-Model2.1.m$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*Model2.1.m$age + b2_lwr*Model2.1.m$age2 + b3_lwr*Model2.1.m$Mujer+ res_lwr)
-Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.m$age2 + b3_upr*Model2.1.m$Mujer+ res_upr)
+se.mod3_3.fn<-function(data,index){
+  reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg1_res<-reg1$residuals
+  reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg2_res<-reg2$residuals
+  
+  data<-data%>% 
+    mutate(res_y_a=reg1_res,res_s_a=reg2_res)
+  
+  reg_FWL<-lm(res_y_a~res_s_a-1,data,subset =index )
+  
+  coefs <- summary(reg_FWL)$coefficients
+  coefs[, "Std. Error"]
+  
+  return(coefs[, "Std. Error"])
+}
 
 
+
+bootbeta<- boot (Model3.m.c, beta.mod3_3.fn,R=1000)
+bootse<- boot (Model3.m.c, se.mod3_3.fn,R=1000)
+
+t=reg_FWL$coefficients/bootse$t0
+
+stargazer(model3,reg_FWL,reg_FWL, out=file.path(getwd(),"/views/punto3_3.txt"),out.header = T, type = "text",se=c(summary(model3)$coefficients[, "Std. Error"],summary(reg_FWL)$coefficients[, "Std. Error"],bootse$t0))
 
 
 ######### 4. predicts earnings ##########
@@ -907,35 +903,14 @@ mod_46<-lm(ln_y~+age+age2+Mujer_age+lneduc,data=test)
 mod_47<-lm(ln_y~age+age2+Mujer_age+Mujer_ed+regSalud,data=test)
 mod_48<-lm(ln_y~age+age2+Mujer+totalHoursWorked + hwork2,data=test)
 
-dfb_41=as.data.frame(dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE)))
-dfb_42=as.data.frame(dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE)))
-dfb_43=as.data.frame(dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE)))
-dfb_44=as.data.frame(dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE)))
-dfb_45=as.data.frame(dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE)))
-dfb_46=as.data.frame(dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE)))
-dfb_47=as.data.frame(dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE)))
-dfb_48=as.data.frame(dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE)))
-
-#stargazer(dfb_41, title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#        covariate.labels=c("Mujer","Hombre"),out = "views/dfb_41.txt",notes = "Modelo 4.1")
-#stargazer(dfb_42, title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2"),out = "views/dfb_42.txt",notes = "Modelo 4.2")
-#stargazer(dfb_43, title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre"),out = "views/dfb_43.txt",notes = "Modelo 4.3")
-#stargazer(dfb_44,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre","ln Educ"),out = "views/dfb_44.txt",notes = "Modelo 4.4")
-#stargazer(dfb_45,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre","primaria incompleta","Primaria completa",
-#                             "secundaria incompleta","secundaria completa","Educ superior","Estrato 2",
-#                             "Estrato 3","Estrato 4","Estrato 5","Estrato 6"),out = "views/dfb_45.txt",notes = "Modelo 4.5")
-#stargazer(dfb_46,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2","Edad*Hombre","ln Educ"),out = "views/dfb_46.txt",notes = "Modelo 4.6")
-#stargazer(dfb_47, title = "Influencia observaciones sobre los coeficientes", type = "text", 
-#          covariate.labels=c("Intercepto","Edad","Edad2","Edad*Hombre","primaria incompleta","Primaria completa",
-#                             "secundaria incompleta","secundaria completa","Educ superior","Estrato 2",
-#                             "Estrato 3","Estrato 4","Estrato 5","Estrato 6"),out = "views/dfb_47.txt",notes = "Modelo 4.5")
-#stargazer(dfb_48, type = "text")
-
+#dfb_41=as.data.frame(dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE)))
+#dfb_42=as.data.frame(dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE)))
+#dfb_43=as.data.frame(dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE)))
+#dfb_44=as.data.frame(dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE)))
+#dfb_45=as.data.frame(dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE)))
+#dfb_46=as.data.frame(dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE)))
+#dfb_47=as.data.frame(dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE)))
+#dfb_48=as.data.frame(dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE)))
 
 
 dffits_41= as.data.frame(dffits(mod_41))

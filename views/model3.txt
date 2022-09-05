@@ -1,0 +1,146 @@
+
+===================================================
+                            Dependent variable:    
+                        ---------------------------
+                                   ln_y            
+---------------------------------------------------
+Mujer                              0.049           
+                                  (0.036)          
+                                                   
+age                               -0.002           
+                                  (0.002)          
+                                                   
+estrato12                         0.310*           
+                                  (0.171)          
+                                                   
+estrato13                         -0.408           
+                                  (0.255)          
+                                                   
+estrato14                          0.329           
+                                  (0.397)          
+                                                   
+estrato15                         0.403**          
+                                  (0.157)          
+                                                   
+estrato16                         -0.005           
+                                  (0.760)          
+                                                   
+maxEducLevel2                    0.643***          
+                                  (0.128)          
+                                                   
+maxEducLevel3                    0.660***          
+                                  (0.125)          
+                                                   
+maxEducLevel4                    0.650***          
+                                  (0.126)          
+                                                   
+maxEducLevel5                    0.901***          
+                                  (0.124)          
+                                                   
+maxEducLevel6                    1.125***          
+                                  (0.129)          
+                                                   
+Mujer_age                        -0.009***         
+                                  (0.001)          
+                                                   
+estrato12:maxEducLevel2          -0.508***         
+                                  (0.158)          
+                                                   
+estrato13:maxEducLevel2            0.125           
+                                  (0.251)          
+                                                   
+estrato14:maxEducLevel2           -0.261           
+                                  (0.481)          
+                                                   
+estrato15:maxEducLevel2          -1.316***         
+                                  (0.269)          
+                                                   
+estrato16:maxEducLevel2           -0.257           
+                                  (0.893)          
+                                                   
+estrato12:maxEducLevel3          -0.352**          
+                                  (0.154)          
+                                                   
+estrato13:maxEducLevel3            0.258           
+                                  (0.245)          
+                                                   
+estrato14:maxEducLevel3           -0.172           
+                                  (0.430)          
+                                                   
+estrato15:maxEducLevel3          -1.064***         
+                                  (0.209)          
+                                                   
+estrato16:maxEducLevel3           -0.322           
+                                  (0.775)          
+                                                   
+estrato12:maxEducLevel4           -0.292*          
+                                  (0.155)          
+                                                   
+estrato13:maxEducLevel4            0.317           
+                                  (0.245)          
+                                                   
+estrato14:maxEducLevel4           -0.129           
+                                  (0.424)          
+                                                   
+estrato15:maxEducLevel4          -1.227***         
+                                  (0.283)          
+                                                   
+estrato16:maxEducLevel4           -0.151           
+                                  (0.820)          
+                                                   
+estrato12:maxEducLevel5          -0.360**          
+                                  (0.152)          
+                                                   
+estrato13:maxEducLevel5            0.276           
+                                  (0.243)          
+                                                   
+estrato14:maxEducLevel5           -0.300           
+                                  (0.387)          
+                                                   
+estrato15:maxEducLevel5          -1.223***         
+                                  (0.193)          
+                                                   
+estrato16:maxEducLevel5           -0.109           
+                                  (0.750)          
+                                                   
+estrato12:maxEducLevel6           -0.293*          
+                                  (0.157)          
+                                                   
+estrato13:maxEducLevel6           0.601**          
+                                  (0.245)          
+                                                   
+estrato14:maxEducLevel6            0.380           
+                                  (0.383)          
+                                                   
+estrato15:maxEducLevel6                            
+                                                   
+                                                   
+estrato16:maxEducLevel6            1.022           
+                                  (0.737)          
+                                                   
+age:estrato12                     0.004**          
+                                  (0.002)          
+                                                   
+age:estrato13                    0.007***          
+                                  (0.002)          
+                                                   
+age:estrato14                    0.009***          
+                                  (0.002)          
+                                                   
+age:estrato15                    0.025***          
+                                  (0.003)          
+                                                   
+age:estrato16                    0.019***          
+                                  (0.003)          
+                                                   
+Constant                         12.874***         
+                                  (0.143)          
+                                                   
+---------------------------------------------------
+Observations                      16,397           
+R2                                 0.360           
+Adjusted R2                        0.358           
+Residual Std. Error         0.719 (df = 16354)     
+F Statistic             218.739*** (df = 42; 16354)
+===================================================
+Note:                   *p<0.1; **p<0.05; ***p<0.01
