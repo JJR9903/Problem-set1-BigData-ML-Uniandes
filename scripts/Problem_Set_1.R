@@ -27,7 +27,7 @@ dir_set <- function(){
 dir_set()
 
 
-pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot,caret,randomForest )
+pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot,caret,randomForest,mcspatial )
 
 
         ##### 1.a Web Scraping data set (GEIH 2018 - BogotÃ¡) ####
@@ -502,6 +502,15 @@ rm(list= ls(pattern = "PG|BG|hist|point"))
 
 
 ##### NAN IMPUTING 
+GEIH_2018 = GEIH_2018 %>% 
+  group_by(estrato1,sex,age,oficio) %>% 
+  mutate(mf_MaxEducLevel = names(which.max(table(maxEducLevel))) )%>%
+  ungroup()
+
+GEIH_2018 = GEIH_2018 %>% 
+  mutate(maxEducLevel = ifelse(test = is.na(maxEducLevel)==T,
+                           yes = mf_MaxEducLevel,
+                           no = maxEducLevel))
 
 GEIH_2018 = GEIH_2018 %>% 
   group_by(estrato1,sex,age,maxEducLevel,oficio) %>% 
@@ -563,7 +572,6 @@ GEIH_2018$regSalud <- as.factor(GEIH_2018$regSalud)
 
 
 
-
 #y_total_m - income salaried + independents total
 y_total_hist_NM <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
@@ -615,8 +623,9 @@ impa_point_NM <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8"))
 
 
 y_afterimputing<-plot_grid(y_total_hist_NM, y_total_point_NM,impa_hist_NM,impa_point_NM, ncol = 2, nrow = 2)
+rm(list= ls(pattern = "PG|BG|hist|point"))
 
-GEIH_2018<-subset(GEIH_2018, select = -c(mf_regSalud,regSalud_nan,mean_impa,mean_y,dummy ))
+GEIH_2018<-subset(GEIH_2018, select = -c(mf_regSalud,regSalud_nan,mean_impa,mean_y,dummy,mf_MaxEducLevel ))
 skim=skim(GEIH_2018)
 
 
@@ -630,19 +639,19 @@ ing_vars<-ing_vars[ing_vars != 'impa']
 for (i in ing_vars){GEIH_2018[i]<-NULL}
 skim=skim(GEIH_2018)
 
-
+#transformaciones de algunas variables 
+GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
+GEIH_2018$age2<-GEIH_2018$age^2
+GEIH_2018<-GEIH_2018%>%
+  mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
+summary(GEIH_2018$ln_y)
+source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
+crosstab(GEIH_2018,row.vars = "Mujer",col.vars = "sex")
 
 
 
 
       ######### 2. Age-earnings profile ##########
-
-#Nos quedamos con y_total_m y la estandarizamos
-GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
-
-GEIH_2018$age2<-GEIH_2018$age^2
-
-
 
  ### Modelo 1.0 (ln_y~age+age2)
 Model1.m <- subset(GEIH_2018, select = c(y_total_m,ln_y,age,age2) )
@@ -722,13 +731,6 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 
 
   ######### 3. Age-earnings profile ##########
-
-#Ln de y_total_m 
-GEIH_2018<-GEIH_2018%>%
-  mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
-summary(GEIH_2018$ln_y)
-source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
-crosstab(GEIH_2018,row.vars = "Mujer",col.vars = "sex")
 
 #MODELO 2.0 (ln_y~sex)
 Model2.m <- subset(GEIH_2018, select = c(ln_y,Mujer) )
@@ -883,19 +885,17 @@ bootreg<- boot (GEIH_2018, eta.mod6.fn,R=1000)
 summary (bootcor)
 
 
-#4.
+
+
+
+
+
+
+
+######### 4. predicts earnings ##########
+
 #4.1
-#Partir la muestra
-install.packages("mcspatial")
-set.seed(10101)
-GEIH_2018 <- GEIH_2018 %>%
-        mutate(holdout= as.logical(1:nrow(GEIH_2018) %in%
-                               sample(nrow(GEIH_2018), nrow(GEIH_2018)*.3))
-        )
-test<-GEIH_2018[GEIH_2018$holdout==T,]
-train<-GEIH_2018[GEIH_2018$holdout==F,]
-#4.2
-#Nuevas variables
+# nuevas variables 
 GEIH_2018$lneduc<-log(as.numeric(GEIH_2018$maxEducLevel))
 GEIH_2018$sex_age<-as.numeric(GEIH_2018$sex)*GEIH_2018$age
 GEIH_2018$sex_ed<-as.numeric(GEIH_2018$sex)*as.numeric(GEIH_2018$maxEducLevel)
@@ -903,6 +903,17 @@ GEIH_2018$hwork2<-(GEIH_2018$totalHoursWorked)^2
 GEIH_2018$sizefirm<-as.numeric(GEIH_2018$sizeFirm)
 GEIH_2018$propiasizefirm<-as.numeric(GEIH_2018$cuentaPropia)*GEIH_2018$sizefirm
 GEIH_2018$relab_formal<-as.numeric(GEIH_2018$relab)*as.numeric(GEIH_2018$formal)
+
+#Partir la muestra
+set.seed(10101)
+GEIH_2018 <- GEIH_2018 %>%
+  mutate(holdout= as.logical(1:nrow(GEIH_2018) %in%
+                               sample(nrow(GEIH_2018), nrow(GEIH_2018)*.3))
+  )
+test<-GEIH_2018[GEIH_2018$holdout==T,]
+train<-GEIH_2018[GEIH_2018$holdout==F,]
+
+#4.2
 #Modelos
 mod_41<-lm(ln_y~age+age2+sex+lneduc,GEIH_2018)
 mod_42<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
@@ -913,78 +924,105 @@ mod_46<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+forma
 
 
 #Resultados
-tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")
+tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")# revisar como guardar solo el y_hat, y los errores 
 
 #Poder predictivo
 mod_41<-lm(ln_y~sex-1,data=train)
 test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse1<-summary(test$se)[4]
+test$se_41<-(test$ln_y-test$mod_41)^2
+mse_41<-summary(test$se_41)[4]
 
+mod_42<-lm(ln_y~age+age2,data=train)
+test$mod_42<-predict(mod_42,newdata = test)
+test$se_42<-(test$ln_y-test$mod_42)^2
+mse_42<-summary(test$se_42)[4]
 
-mod_41<-lm(ln_y~age+age2,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse2<-summary(test$se)[4]
+mod_43<-lm(ln_y~age+age2+sex,data=train)
+test$mod_43<-predict(mod_43,newdata = test)
+test$se_43<-(test$ln_y-test$mod_43)^2
+mse_43<-summary(test$se_43)[4]
 
+mod_44<-lm(ln_y~age+age2+sex+lneduc,data=train)
+test$mod_44<-predict(mod_44,newdata = test)
+test$se_44<-(test$ln_y-test$mod_44)^2
+mse_44<-summary(test$se_44)[4]
 
-mod_41<-lm(ln_y~age+age2+sex,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse3<-summary(test$se)[4]
+mod_45<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=train)
+test$mod_45<-predict(mod_45,newdata = test)
+test$se_45<-(test$ln_y-test$mod_45)^2
+mse_45<-summary(test$se_45)[4]
 
-mod_41<-lm(ln_y~age+age2+sex+lneduc,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse4<-summary(test$se)[4]
+mod_46<-lm(ln_y~age+age2+sex_age+lneduc,data=train)
+test$mod_46<-predict(mod_46,newdata = test)
+test$se_46<-(test$ln_y-test$mod_46)^2
+mse_46<-summary(test$se_46)[4]
 
-mod_41<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse5<-summary(test$se)[4]
+mod_47<-lm(ln_y~age+age2+sex_age+sex_ed+regSalud,data=train)
+test$mod_47<-predict(mod_47,newdata = test)
+test$se_47<-(test$ln_y-test$mod_47)^2
+mse_47<-summary(test$se_47)[4]
 
-mod_41<-lm(ln_y~+age+age2+sex_age+lneduc,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse6<-summary(test$se)[4]
+mod_48<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2,data=train)
+test$mod_48<-predict(mod_48,newdata = test)
+test$se_48<-(test$ln_y-test$mod_48)^2
+mse_48<-summary(test$se_48)[4]
 
-mod_41<-lm(ln_y~+age+age2+sex_age+sex_ed+regSalud,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse7<-summary(test$se)[4]
+#mod_49<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2 + relab+formal+ relab_formal+cuentaPropia+sizefirm+propiasizefirm,data=train)
+#test$mod_49<-predict(mod_49,newdata = test)
+#mse_49<-summary(test$se_49)[4]
+#test$se_49<-(test$ln_y-test$mod_49)^2
 
-mod_41<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse8<-summary(test$se)[4]
-
-mod_41<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab_formal+cuentaPropia+sizefirm+propiasizefirm,data=train)
-test$mod_41<-predict(mod_41,newdata = test)
-test$se<-(test$ln_y-test$mod_41)^2
-mse9<-summary(test$se)[4]
-
-table(mse1, mse2, mse3, mse4, mse5, mse6, mse7, mse8, mse9)
+table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48)#, mse_49)
 
 saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
 
 GEIH_2018<-readRDS(file =paste0(getwd(),"/GEIH_2018_4.rds"))
 
-##4.4 Validación cruzada
+## 4.3. influence statistic
+
+mod_41<-lm(ln_y~sex-1,data=test)
+mod_42<-lm(ln_y~age+age2,data=test)
+mod_43<-lm(ln_y~age+age2+sex,data=test)
+mod_44<-lm(ln_y~age+age2+sex+lneduc,data=test)
+mod_45<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=test)
+mod_46<-lm(ln_y~age+age2+sex_age+lneduc,data=test)
+mod_47<-lm(ln_y~age+age2+sex_age+sex_ed+regSalud,data=test)
+mod_48<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2,data=test)
+
+dfb_41=dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE))
+dfb_42=dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE))
+dfb_43=dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE))
+dfb_44=dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE))
+dfb_45=dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE))
+dfb_46=dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE))
+dfb_47=dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE))
+dfb_48=dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE))
+
+dffits_41= as.data.frame(dffits(mod_41))
+dffits_42= as.data.frame(dffits(mod_42))
+dffits_43= as.data.frame(dffits(mod_43))
+dffits_44= as.data.frame(dffits(mod_44))
+dffits_45= as.data.frame(dffits(mod_45))
+dffits_46= as.data.frame(dffits(mod_46))
+dffits_47= as.data.frame(dffits(mod_47))
+dffits_48= as.data.frame(dffits(mod_48))
+dffits=cbind(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
+rm(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
+
+
+##4.4 Validacion cruzada
 # Se usan los modelos 5 y 7 porque son los que tienen menor error 
 
-#Llenar missing de educacion
-GEIH_2018$maxEducLevel[is.na(GEIH_2018$maxEducLevel)] <- "1"
-
-model1<-caret::train(ln_y~age+age2+sex+estrato1+maxEducLevel,
-              data=GEIH_2018, trControl=caret::trainControl(method="cv",number=nrow(GEIH_2018)))
 
 
+model1<-train(ln_y~age+age2+sex+estrato1+maxEducLevel,
+              data=GEIH_2018, trControl=trainControl(method="cv",number=nrow(GEIH_2018)))
 
-model2<-caret::train(ln_y~+age+age2+sex_age+sex_ed+regSalud,
-                     data=GEIH_2018, trControl=caret::trainControl(method="cv",number=nrow(GEIH_2018)))
 
 
-install.packages("randomForest")
-install.packages("caret")
+model2<-train(ln_y~+age+age2+sex_age+sex_ed+regSalud,
+                     data=GEIH_2018, trControl=trainControl(method="cv",number=nrow(GEIH_2018)))
+
+
 
 
