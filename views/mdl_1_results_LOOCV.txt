@@ -1,2 +1,2 @@
-Intercepto|RMSE|R^2|MAE|Prediccion promedio
-TRUE|0.711783803992448|0.371212285483469|0.500851354858725|13.90114890739
+  Intercepto              RMSE              R^2               MAE Prediccion promedio
+1       TRUE 0.711783803992448 0.37121228548347 0.500851354858726            13.90115
