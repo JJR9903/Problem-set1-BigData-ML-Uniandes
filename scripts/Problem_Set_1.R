@@ -933,13 +933,21 @@ hist(dffits$`dffits(mod_46)`)
 hist(dffits$`dffits(mod_47)`)
 hist(dffits$`dffits(mod_48)`)
 
-##4.4 Validacion cruzada
+
+  ## 4.4 Validacion cruzada
 # Se usan los modelos 5 y 7 porque son los que tienen menor error 
 
 ctrl <- trainControl(method = "LOOCV")
 model1 <- train(ln_y~age+age2+sex+estrato1+maxEducLevel, data = GEIH_2018, method = "lm", trControl = ctrl)
 model2 <- train(ln_y~+age+age2+sex_age+sex_ed+regSalud, data = GEIH_2018, method = "lm", trControl = ctrl)
 
+mdl_1_results=as.data.frame(table(model1$results['intercept'],model1$results['RMSE'],model1$results['Rsquared'],model1$results['MAE']))
+mdl_1_results['Freq']<-mean(model1$pred$pred)
+mdl_1_results<- rename(mdl_1_results, "Intercepto"="Var1","RMSE"="Var2","R^2"="Var3","MAE"="Var4","Prediccion promedio"="Freq")
+write.table(mdl_1_results, file = "views/mdl_1_results_LOOCV.txt", sep = ",", quote = FALSE, row.names = F)
 
-
+mdl_2_results=as.data.frame(table(model2$results['intercept'],model2$results['RMSE'],model2$results['Rsquared'],model2$results['MAE']))
+mdl_2_results['Freq']<-mean(model2$pred$pred)
+mdl_2_results<- rename(mdl_2_results, "Intercepto"="Var1","RMSE"="Var2","R^2"="Var3","MAE"="Var4","Prediccion promedio"="Freq")
+write.table(mdl_1_results, file = "views/mdl_2_results_LOOCV.txt", sep = ",", quote = FALSE, row.names = F)
 
