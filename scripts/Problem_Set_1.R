@@ -797,8 +797,6 @@ se.mod3_3.fn<-function(data,index){
   return(coefs[, "Std. Error"])
 }
 
-
-
 bootbeta<- boot (Model3.m.c, beta.mod3_3.fn,R=1000)
 bootse<- boot (Model3.m.c, se.mod3_3.fn,R=1000)
 
@@ -815,7 +813,7 @@ GEIH_2018$Mujer_age<-GEIH_2018$Mujer*GEIH_2018$age
 GEIH_2018<-GEIH_2018%>%mutate(Mujer_ed = ifelse(test = GEIH_2018$Mujer==1,yes = GEIH_2018$maxEducLevel,no = "0"))
 GEIH_2018$hwork2<-(GEIH_2018$totalHoursWorked)^2 
 GEIH_2018 = GEIH_2018 %>% mutate(relab_formal = ifelse(test = GEIH_2018$formal=="1",yes = GEIH_2018$relab,no = 0))
-GEIH_2018 = GEIH_2018 %>% mutate(propiasizefirm = ifelse(test = GEIH_2018$cuentaPropia=="1",yes = GEIH_2018$sizefirm,no = 0))
+
 
 #4.1
 #Partir la muestra
@@ -829,17 +827,6 @@ train<-GEIH_2018[GEIH_2018$holdout==F,]
 
 #4.2
 #Modelos
-mod_41<-lm(ln_y~age+age2+Mujer+lneduc,GEIH_2018)
-mod_42<-lm(ln_y~age+age2+Mujer+maxEducLevel+estrato1,GEIH_2018)
-mod_43<-lm(ln_y~+age+age2+Mujer_age+lneduc,GEIH_2018)
-mod_44<-lm(ln_y~+age+age2+Mujer_age+Mujer_ed+regSalud,GEIH_2018)
-mod_45<-lm(ln_y~+age+age2+Mujer+totalHoursWorked + hwork2,GEIH_2018)
-mod_46<-lm(ln_y~+age+age2+Mujer+totalHoursWorked + hwork2+ relab+formal+relab_formal+cuentaPropia+sizefirm+propiasizefirm,GEIH_2018)
-
-
-#Resultados
-tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text",out = "views/modelos en muestra p4.text")# revisar como guardar solo el y_hat, y los errores 
-
 #Poder predictivo
 mod_41<-lm(ln_y~Mujer-1,data=train)
 test$mod_41<-predict(mod_41,newdata = test)
@@ -887,6 +874,7 @@ mse_49<-summary(test$se_49)[4]
 test$se_49<-(test$ln_y-test$mod_49)^2
 
 mse<-table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48, mse_49)
+mse<-as.data.frame(mse)
 write.table(mse, file = "views/mse.txt", sep = ",", quote = FALSE, row.names = F)
 
 saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
