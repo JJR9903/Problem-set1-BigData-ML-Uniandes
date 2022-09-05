@@ -1,6 +1,6 @@
 maxEducLevel,maxEducLevel %,regSalud,regSalud %
 Ninguno,0.01,r. contributivo,0.83
-Primaria incompelta,0.05,r. especial,0.03
+Primaria incompleta,0.05,r. especial,0.03
 Primaria completa,0.09,r. subsidiado,0.15
 Secundaria incompleta,0.11,NaN,NaN
 Secundaria completa,0.32,NaN,NaN

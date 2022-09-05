@@ -293,7 +293,7 @@ age_hist <- ggplot(GEIH_2018, aes(x=age)) +
                                ))+
   labs(title="Edad",x="Edad",y="densidad")+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 
 totalHoursWorked_hist <- ggplot(GEIH_2018, aes(x=totalHoursWorked)) +
@@ -307,7 +307,7 @@ totalHoursWorked_hist <- ggplot(GEIH_2018, aes(x=totalHoursWorked)) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$totalHoursWorked,na.rm = T)+sd(GEIH_2018$totalHoursWorked,na.rm = T),2)),"= +1 sd")
                      ))+
   labs(title="Horas trabajadas a la semana",x="",y="densidad")+
-  theme_minimal()+theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme_minimal()+theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 
 numerical_plot<- plot_grid(age_hist, totalHoursWorked_hist, ncol = 2, nrow = 1)
@@ -333,13 +333,13 @@ impa_hist <- ggplot(GEIH_2018, aes(x=impa/(1000000))) +
   labs(title = "Ingreso actividad principal",x="Ingreso monetario actividad principal",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 impa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title = "Ingreso actividad principal",y="Ingreso monetario actividad principal",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
 
 # isa - principal occ.
 isa_hist <- ggplot(GEIH_2018, aes(x=isa/(1000000))) +
@@ -356,13 +356,13 @@ isa_hist <- ggplot(GEIH_2018, aes(x=isa/(1000000))) +
   labs(title = "Ingreso actividad secundaria",x="Ingreso monetario actividad secundaria",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 isa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title = "Ingreso actividad secundaria",y="Ingreso monetario actividad secundaria",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
 
 # y_salary_m - principal occ.
 salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
@@ -379,13 +379,13 @@ salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
   labs(title = "Salario actividad principal",x="Salario actividad principal",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 salary_point <- ggplot(GEIH_2018, aes(y=y_salary_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title = "Salario actividad principal",y="Salario actividad principal",x="Edad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
 
 # y_ingLab_m - all occ. 
 ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
@@ -402,13 +402,13 @@ ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
   labs(title = "Salario laboral",x="Salario laboral",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 ingLab_point <- ggplot(GEIH_2018, aes(y=y_ingLab_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title = "Salario laboral",y="Salario laboral",x="Edad", caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
   
 #y_total_m - income salaried + independents total
 y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
@@ -425,13 +425,13 @@ y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
   labs(title= "Salario + ingreso independientes",x="Salario + ingreso independientes",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 y_total_point <- ggplot(GEIH_2018, aes(y=y_total_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title= "Salario + ingreso independientes",y="Salario + ingreso independientes",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
 
 #y_gananciaIndep_m 
 gananciaIndep_hist <- ggplot(GEIH_2018, aes(x=y_gananciaIndep_m/(1000000))) +
@@ -447,13 +447,13 @@ gananciaIndep_hist <- ggplot(GEIH_2018, aes(x=y_gananciaIndep_m/(1000000))) +
   labs(title= "Ganancia total independientes",x="Ganancia total independientes",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
 gananciaIndep_point <- ggplot(GEIH_2018, aes(y=y_gananciaIndep_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
   labs(title="Ganancia total independientes",y="Ganancia total independientes)",x="Edad", caption="$COP En millones mensuales")+
   theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),axis.title = element_text(size = 20))
 
 y_hist<-plot_grid(impa_hist, isa_hist,salary_hist,ingLab_hist,gananciaIndep_hist,y_total_hist, ncol = 2, nrow = 3)
 y_point<-plot_grid(impa_point, isa_point,salary_point,ingLab_point,gananciaIndep_point,y_total_point, ncol = 2, nrow = 3)
@@ -590,8 +590,8 @@ GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018$age2<-GEIH_2018$age^2
 GEIH_2018<-GEIH_2018%>%
   mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
-estrato<-destring(estrato1)
-educacion<-destring(maxEducLevel)
+GEIH_2018$estrato<-as.numeric(GEIH_2018$estrato1)
+GEIH_2018$educacion<-as.numeric(GEIH_2018$maxEducLevel)
 ## guardamos la base de datos limpia 
 write.csv(GEIH_2018,file = "stores/GEIH_2018_clean.csv",fileEncoding = "UTF-8")
 
@@ -656,20 +656,17 @@ Model1.m$y_fitted_upr <- (b0_upr + b1_upr*Model1.m$age + b2_upr*Model1.m$age2 + 
 
 age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = ln_y) ) +
   geom_line(aes(y = y_fitted), size = 1)+
-  geom_line(aes(y = y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_line(aes(y = y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_ribbon( aes(ymin = y_fitted_lwr, ymax = y_fitted_upr), fill = "lightblue", alpha = .4)+
-  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="logaritmo del ingreso")+
+  geom_ribbon( aes(ymin = y_fitted_lwr, ymax = y_fitted_upr,color = "IC Bootstrap"),fill="lightblue", alpha = .4)+
+  geom_ribbon( aes(ymin = y_f_lw, ymax = y_f_up,color="IC"),fill="red", alpha = .4)+
+  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="logaritmo del ingreso",legend="Intervalos")+
   theme_light()+
   ylim(0,40)+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  scale_color_manual("",values = c("IC Bootstrap"="lightblue","IC"="red"))+
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
   
 ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m1)
 
-
-
-
-
+ 
 
   ######### 3. Age-earnings profile ##########
 
@@ -679,6 +676,7 @@ model2<-lm(ln_y~Mujer,Model2.m)
 
 stargazer(model2,title="", out=file.path(getwd(),"/views/model2.txt"),out.header = T,type="text")
 summary(model2)
+
 
 #MODELO 2.1 (ln_y~sex+age+age2)
 ####### OJO TODAVIA NO ESTA  ######
