@@ -728,27 +728,32 @@ b3_upr <-boot.ci(boot_beta_m2.1,type = "basic",index = 4)[[4]][[5]]
 res_lwr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[4]]
 res_upr <-boot.ci(boot_res_m2.1,type = "basic")[[4]][[5]]
 
+M2_M<-data.frame(
+  "age" = min(Model2.1.m$age):max(Model2.1.m$age))
+M2_M$Mujer = 1
+M2_H<-data.frame(
+  "age" = min(Model2.1.m$age):max(Model2.1.m$age))
+M2_H$Mujer = 0
+M2= rbind(M2_H,M2_M)
+M2$age2<-M2$age^2
+M2$ln_y_fitted <- (b0 + b1*M2$age + b2*M2$age2 + b3*M2$Mujer+ mean(res))
+M2$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*M2$age + b2_lwr*M2$age2 + b3_lwr*M2$Mujer+ res_lwr)
+M2$ln_y_fitted_upr <- (b0_upr + b1_upr*M2$age + b2_upr*M2$age2 + b3_upr*M2$Mujer+ res_upr)
+M2$Mujer<-as.factor(M2$Mujer)
 
 
-Model2.1.m$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*Model2.1.m$age + b2_lwr*Model2.1.m$age2 + b3_lwr*Model2.1.m$Mujer+ res_lwr)
-Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.m$age2 + b3_upr*Model2.1.m$Mujer+ res_upr)
-
-#age_earningsProfile_m2.1 <-
- ggplot(Model2.1.m, aes(x = age, y = ln_y) ) +
-  geom_line(aes(y = ln_y_fitted_H), size = 1)
-  geom_line(aes(y = Model2.1.m$ln_y_fitted_lwr ,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_line(aes(y = Model2.1.m$ln_y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_ribbon( aes(ymin = Model2.1.m$ln_y_fitted_lwr, ymax = Model2.1.m$ln_y_fitted_upr, fill = "lightblue", alpha = .4))+
-  geom_ribbon( aes(ymin = ln_y_f_lw, ymax = ln_y_f_up), fill = "red", alpha = .4)+
-  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
-  scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
-                     , labels=c("ci"="ci",
-                                "y_hat"="y_hat"
-                     ))+
+age_earningsProfile_m2.1 <-ggplot(M2, aes(x = age, y = ln_y_fitted) ) +
+  geom_line(aes(y = ln_y_fitted,group=Mujer,color=Mujer), size = 1 )+
+  geom_ribbon( aes(ymin = ln_y_fitted_lwr, ymax = ln_y_fitted_upr, fill = Mujer,color=Mujer,group=Mujer), alpha = .4)+
+  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="logaritmo del salario")+
+  scale_color_manual(name= "Mujer",values = c("0"="#5bc0de","1"="#ffbdbd"), labels=c("0"="Hombre","1"="Mujer"))+
+  scale_fill_manual(name= "Mujer",values = c("0"="#5bc0de","1"="#ffbdbd"), labels=c("0"="Hombre","1"="Mujer"))+
   theme_light()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18),axis.title = element_text(size = 20))
 
-ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m1)
+
+ggsave("views/age_earningsProfile_m2.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m2.1)
+
 
 
 
