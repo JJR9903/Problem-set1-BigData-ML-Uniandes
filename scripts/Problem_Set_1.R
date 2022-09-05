@@ -614,7 +614,7 @@ b1<-Coef1[2]
 b2<-Coef1[3]
 #Derivando para encontrar el punto mx me interesa es b1 y b2 
 age_peak=-b1/(2*b2)
-
+ly=b0+b1*age_peak+b2*age_peak^2
 
 #Definir la función de para el bootstrap
 set.seed(10101)
@@ -743,18 +743,13 @@ GEIH_2018$Mujer_age<-GEIH_2018$Mujer*GEIH_2018$age
 GEIH_2018<-GEIH_2018%>%mutate(Mujer_ed = ifelse(test = GEIH_2018$Mujer==1,yes = GEIH_2018$maxEducLevel,no = "0"))
 
 Model3.m.c <- subset(GEIH_2018, select = c(ln_y,Mujer,age,age2,Mujer_age,maxEducLevel,estrato1,oficio) )
-model3<-lm(ln_y~Mujer+age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age, Model3.m.c)
+model3<-lm(ln_y~Mujer+age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age, Model3.m.c)
 
 ## FWL  
-require("tidyverse")
-require("fabricatr")
 
-#GEIH_2018$res_y_a<-1
-#GEIH_2018$res_s_a<-1
-
-reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,Model3.m.c)
+reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age,Model3.m.c)
 reg1_res<-reg1$residuals
-reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,Model3.m.c)
+reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age,Model3.m.c)
 reg2_res<-reg2$residuals
 
 Model3.m.c<-Model3.m.c%>% 
@@ -766,9 +761,9 @@ reg_FWL<-lm(res_y_a~res_s_a-1,Model3.m.c)
 #MODELO CON BOOT ##sacar el error 
 set.seed(10101)
 beta.mod3_3.fn<-function(data,index){
-  reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg1 <- lm(ln_y~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age,data,subset =index )
   reg1_res<-reg1$residuals
-  reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age+Mujer_age,data,subset =index )
+  reg2 <- lm(Mujer~age+estrato1+maxEducLevel+oficio+age:maxEducLevel+estrato1:age,data,subset =index )
   reg2_res<-reg2$residuals
   
   data<-data%>% 

@@ -1,327 +1,324 @@
 
-============================================================================================
-                                              Dependent variable:                           
-                    ------------------------------------------------------------------------
-                                ln_y                               res_y_a                  
-                                (1)                       (2)                   (3)         
---------------------------------------------------------------------------------------------
-Mujer                          0.052                                                        
-                                                                                            
-                                                                                            
-age                            -0.010                                                       
-                                                                                            
-                                                                                            
-estrato12                      -0.002                                                       
-                                                                                            
-                                                                                            
-estrato13                      0.151                                                        
-                                                                                            
-                                                                                            
-estrato14                      0.610                                                        
-                                                                                            
-                                                                                            
-estrato15                      0.382                                                        
-                                                                                            
-                                                                                            
-estrato16                      1.005                                                        
-                                                                                            
-                                                                                            
-maxEducLevel2                  0.555                                                        
-                                                                                            
-                                                                                            
-maxEducLevel3                  0.368                                                        
-                                                                                            
-                                                                                            
-maxEducLevel4                  0.088                                                        
-                                                                                            
-                                                                                            
-maxEducLevel5                  -0.030                                                       
-                                                                                            
-                                                                                            
-maxEducLevel6                  -0.138                                                       
-                                                                                            
-                                                                                            
-oficio2                        -0.218                                                       
-                                                                                            
-                                                                                            
-oficio3                        -0.823                                                       
-                                                                                            
-                                                                                            
-oficio4                        0.349                                                        
-                                                                                            
-                                                                                            
-oficio5                        -0.229                                                       
-                                                                                            
-                                                                                            
-oficio6                        -0.200                                                       
-                                                                                            
-                                                                                            
-oficio7                        -0.407                                                       
-                                                                                            
-                                                                                            
-oficio8                        -0.097                                                       
-                                                                                            
-                                                                                            
-oficio9                        -0.025                                                       
-                                                                                            
-                                                                                            
-oficio11                       -0.271                                                       
-                                                                                            
-                                                                                            
-oficio12                       -0.188                                                       
-                                                                                            
-                                                                                            
-oficio13                       -0.461                                                       
-                                                                                            
-                                                                                            
-oficio14                       -1.060                                                       
-                                                                                            
-                                                                                            
-oficio15                       -0.488                                                       
-                                                                                            
-                                                                                            
-oficio16                       -0.823                                                       
-                                                                                            
-                                                                                            
-oficio17                       -1.078                                                       
-                                                                                            
-                                                                                            
-oficio18                       -1.116                                                       
-                                                                                            
-                                                                                            
-oficio19                       -0.466                                                       
-                                                                                            
-                                                                                            
-oficio20                       0.002                                                        
-                                                                                            
-                                                                                            
-oficio21                       -0.152                                                       
-                                                                                            
-                                                                                            
-oficio30                       -0.193                                                       
-                                                                                            
-                                                                                            
-oficio31                       0.251                                                        
-                                                                                            
-                                                                                            
-oficio32                       -0.666                                                       
-                                                                                            
-                                                                                            
-oficio33                       -0.751                                                       
-                                                                                            
-                                                                                            
-oficio34                       -1.050                                                       
-                                                                                            
-                                                                                            
-oficio35                       -0.678                                                       
-                                                                                            
-                                                                                            
-oficio36                       -1.417                                                       
-                                                                                            
-                                                                                            
-oficio37                       -1.184                                                       
-                                                                                            
-                                                                                            
-oficio38                       -0.938                                                       
-                                                                                            
-                                                                                            
-oficio39                       -0.748                                                       
-                                                                                            
-                                                                                            
-oficio40                       -0.717                                                       
-                                                                                            
-                                                                                            
-oficio41                       -1.051                                                       
-                                                                                            
-                                                                                            
-oficio42                       -0.477                                                       
-                                                                                            
-                                                                                            
-oficio43                       -0.169                                                       
-                                                                                            
-                                                                                            
-oficio44                       -0.619                                                       
-                                                                                            
-                                                                                            
-oficio45                       -1.181                                                       
-                                                                                            
-                                                                                            
-oficio49                       -0.865                                                       
-                                                                                            
-                                                                                            
-oficio50                       -0.680                                                       
-                                                                                            
-                                                                                            
-oficio51                       -0.837                                                       
-                                                                                            
-                                                                                            
-oficio52                       -0.797                                                       
-                                                                                            
-                                                                                            
-oficio53                       -1.093                                                       
-                                                                                            
-                                                                                            
-oficio54                       -1.405                                                       
-                                                                                            
-                                                                                            
-oficio55                       -1.020                                                       
-                                                                                            
-                                                                                            
-oficio56                       -1.170                                                       
-                                                                                            
-                                                                                            
-oficio57                       -1.282                                                       
-                                                                                            
-                                                                                            
-oficio58                       -0.667                                                       
-                                                                                            
-                                                                                            
-oficio59                       -1.031                                                       
-                                                                                            
-                                                                                            
-oficio60                       -0.579                                                       
-                                                                                            
-                                                                                            
-oficio61                       -1.136                                                       
-                                                                                            
-                                                                                            
-oficio62                       -0.847                                                       
-                                                                                            
-                                                                                            
-oficio63                       -0.749                                                       
-                                                                                            
-                                                                                            
-oficio70                       -0.455                                                       
-                                                                                            
-                                                                                            
-oficio72                       -0.827                                                       
-                                                                                            
-                                                                                            
-oficio73                       -0.022                                                       
-                                                                                            
-                                                                                            
-oficio74                       -1.021                                                       
-                                                                                            
-                                                                                            
-oficio75                       -1.542                                                       
-                                                                                            
-                                                                                            
-oficio76                       -0.702                                                       
-                                                                                            
-                                                                                            
-oficio77                       -1.052                                                       
-                                                                                            
-                                                                                            
-oficio78                       -2.112                                                       
-                                                                                            
-                                                                                            
-oficio79                       -1.182                                                       
-                                                                                            
-                                                                                            
-oficio80                       -1.267                                                       
-                                                                                            
-                                                                                            
-oficio81                       -1.169                                                       
-                                                                                            
-                                                                                            
-oficio82                       -1.310                                                       
-                                                                                            
-                                                                                            
-oficio83                       -0.925                                                       
-                                                                                            
-                                                                                            
-oficio84                       -0.990                                                       
-                                                                                            
-                                                                                            
-oficio85                       -0.906                                                       
-                                                                                            
-                                                                                            
-oficio86                       -0.824                                                       
-                                                                                            
-                                                                                            
-oficio87                       -0.972                                                       
-                                                                                            
-                                                                                            
-oficio88                       -1.618                                                       
-                                                                                            
-                                                                                            
-oficio89                       -0.870                                                       
-                                                                                            
-                                                                                            
-oficio90                       -0.801                                                       
-                                                                                            
-                                                                                            
-oficio91                       -1.039                                                       
-                                                                                            
-                                                                                            
-oficio92                       -0.839                                                       
-                                                                                            
-                                                                                            
-oficio93                       -1.155                                                       
-                                                                                            
-                                                                                            
-oficio94                       -1.732                                                       
-                                                                                            
-                                                                                            
-oficio95                       -0.906                                                       
-                                                                                            
-                                                                                            
-oficio96                       -0.169                                                       
-                                                                                            
-                                                                                            
-oficio97                       -1.049                                                       
-                                                                                            
-                                                                                            
-oficio98                       -0.898                                                       
-                                                                                            
-                                                                                            
-oficio99                       -1.110                                                       
-                                                                                            
-                                                                                            
-Mujer_age                      -0.006                                                       
-                                                                                            
-                                                                                            
-age:maxEducLevel2              -0.005                                                       
-                                                                                            
-                                                                                            
-age:maxEducLevel3              0.0003                                                       
-                                                                                            
-                                                                                            
-age:maxEducLevel4              0.006                                                        
-                                                                                            
-                                                                                            
-age:maxEducLevel5              0.012                                                        
-                                                                                            
-                                                                                            
-age:maxEducLevel6              0.020                                                        
-                                                                                            
-                                                                                            
-age:estrato12                  0.003                                                        
-                                                                                            
-                                                                                            
-age:estrato13                  0.001                                                        
-                                                                                            
-                                                                                            
-age:estrato14                  -0.002                                                       
-                                                                                            
-                                                                                            
-age:estrato15                  0.010                                                        
-                                                                                            
-                                                                                            
-age:estrato16                  0.004                                                        
-                                                                                            
-                                                                                            
-res_s_a                                                  0.052               0.052***       
-                                                        (0.033)               (0.004)       
-                                                                                            
-Constant                     14.595***                                                      
-                              (0.273)                                                       
-                                                                                            
---------------------------------------------------------------------------------------------
-Observations                   16,397                   16,397                16,397        
-R2                             0.461                    0.0001                0.0001        
-Adjusted R2                    0.458                    0.0001                0.0001        
-Residual Std. Error      0.661 (df = 16294)       0.659 (df = 16396)    0.659 (df = 16396)  
-F Statistic         136.637*** (df = 102; 16294) 2.428 (df = 1; 16396) 2.428 (df = 1; 16396)
-============================================================================================
-Note:                                                            *p<0.1; **p<0.05; ***p<0.01
+======================================================================================================
+                                                   Dependent variable:                                
+                    ----------------------------------------------------------------------------------
+                                ln_y                                    res_y_a                       
+                                (1)                         (2)                        (3)            
+------------------------------------------------------------------------------------------------------
+Mujer                          -0.197                                                                 
+                                                                                                      
+                                                                                                      
+age                            -0.014                                                                 
+                                                                                                      
+                                                                                                      
+estrato12                      -0.001                                                                 
+                                                                                                      
+                                                                                                      
+estrato13                      0.149                                                                  
+                                                                                                      
+                                                                                                      
+estrato14                      0.609                                                                  
+                                                                                                      
+                                                                                                      
+estrato15                      0.381                                                                  
+                                                                                                      
+                                                                                                      
+estrato16                      1.010                                                                  
+                                                                                                      
+                                                                                                      
+maxEducLevel2                  0.505                                                                  
+                                                                                                      
+                                                                                                      
+maxEducLevel3                  0.326                                                                  
+                                                                                                      
+                                                                                                      
+maxEducLevel4                  0.049                                                                  
+                                                                                                      
+                                                                                                      
+maxEducLevel5                  -0.068                                                                 
+                                                                                                      
+                                                                                                      
+maxEducLevel6                  -0.159                                                                 
+                                                                                                      
+                                                                                                      
+oficio2                        -0.221                                                                 
+                                                                                                      
+                                                                                                      
+oficio3                        -0.834                                                                 
+                                                                                                      
+                                                                                                      
+oficio4                        0.346                                                                  
+                                                                                                      
+                                                                                                      
+oficio5                        -0.228                                                                 
+                                                                                                      
+                                                                                                      
+oficio6                        -0.199                                                                 
+                                                                                                      
+                                                                                                      
+oficio7                        -0.411                                                                 
+                                                                                                      
+                                                                                                      
+oficio8                        -0.109                                                                 
+                                                                                                      
+                                                                                                      
+oficio9                        -0.028                                                                 
+                                                                                                      
+                                                                                                      
+oficio11                       -0.268                                                                 
+                                                                                                      
+                                                                                                      
+oficio12                       -0.183                                                                 
+                                                                                                      
+                                                                                                      
+oficio13                       -0.468                                                                 
+                                                                                                      
+                                                                                                      
+oficio14                       -1.055                                                                 
+                                                                                                      
+                                                                                                      
+oficio15                       -0.492                                                                 
+                                                                                                      
+                                                                                                      
+oficio16                       -0.825                                                                 
+                                                                                                      
+                                                                                                      
+oficio17                       -1.086                                                                 
+                                                                                                      
+                                                                                                      
+oficio18                       -1.125                                                                 
+                                                                                                      
+                                                                                                      
+oficio19                       -0.467                                                                 
+                                                                                                      
+                                                                                                      
+oficio20                       -0.006                                                                 
+                                                                                                      
+                                                                                                      
+oficio21                       -0.150                                                                 
+                                                                                                      
+                                                                                                      
+oficio30                       -0.200                                                                 
+                                                                                                      
+                                                                                                      
+oficio31                       0.248                                                                  
+                                                                                                      
+                                                                                                      
+oficio32                       -0.670                                                                 
+                                                                                                      
+                                                                                                      
+oficio33                       -0.747                                                                 
+                                                                                                      
+                                                                                                      
+oficio34                       -1.043                                                                 
+                                                                                                      
+                                                                                                      
+oficio35                       -0.686                                                                 
+                                                                                                      
+                                                                                                      
+oficio36                       -1.421                                                                 
+                                                                                                      
+                                                                                                      
+oficio37                       -1.201                                                                 
+                                                                                                      
+                                                                                                      
+oficio38                       -0.931                                                                 
+                                                                                                      
+                                                                                                      
+oficio39                       -0.749                                                                 
+                                                                                                      
+                                                                                                      
+oficio40                       -0.722                                                                 
+                                                                                                      
+                                                                                                      
+oficio41                       -1.054                                                                 
+                                                                                                      
+                                                                                                      
+oficio42                       -0.482                                                                 
+                                                                                                      
+                                                                                                      
+oficio43                       -0.163                                                                 
+                                                                                                      
+                                                                                                      
+oficio44                       -0.618                                                                 
+                                                                                                      
+                                                                                                      
+oficio45                       -1.185                                                                 
+                                                                                                      
+                                                                                                      
+oficio49                       -0.885                                                                 
+                                                                                                      
+                                                                                                      
+oficio50                       -0.685                                                                 
+                                                                                                      
+                                                                                                      
+oficio51                       -0.840                                                                 
+                                                                                                      
+                                                                                                      
+oficio52                       -0.801                                                                 
+                                                                                                      
+                                                                                                      
+oficio53                       -1.099                                                                 
+                                                                                                      
+                                                                                                      
+oficio54                       -1.436                                                                 
+                                                                                                      
+                                                                                                      
+oficio55                       -1.039                                                                 
+                                                                                                      
+                                                                                                      
+oficio56                       -1.207                                                                 
+                                                                                                      
+                                                                                                      
+oficio57                       -1.290                                                                 
+                                                                                                      
+                                                                                                      
+oficio58                       -0.671                                                                 
+                                                                                                      
+                                                                                                      
+oficio59                       -1.037                                                                 
+                                                                                                      
+                                                                                                      
+oficio60                       -0.595                                                                 
+                                                                                                      
+                                                                                                      
+oficio61                       -1.104                                                                 
+                                                                                                      
+                                                                                                      
+oficio62                       -0.847                                                                 
+                                                                                                      
+                                                                                                      
+oficio63                       -0.717                                                                 
+                                                                                                      
+                                                                                                      
+oficio70                       -0.456                                                                 
+                                                                                                      
+                                                                                                      
+oficio72                       -0.805                                                                 
+                                                                                                      
+                                                                                                      
+oficio73                       0.007                                                                  
+                                                                                                      
+                                                                                                      
+oficio74                       -1.006                                                                 
+                                                                                                      
+                                                                                                      
+oficio75                       -1.574                                                                 
+                                                                                                      
+                                                                                                      
+oficio76                       -0.701                                                                 
+                                                                                                      
+                                                                                                      
+oficio77                       -1.061                                                                 
+                                                                                                      
+                                                                                                      
+oficio78                       -2.193                                                                 
+                                                                                                      
+                                                                                                      
+oficio79                       -1.203                                                                 
+                                                                                                      
+                                                                                                      
+oficio80                       -1.252                                                                 
+                                                                                                      
+                                                                                                      
+oficio81                       -1.162                                                                 
+                                                                                                      
+                                                                                                      
+oficio82                       -1.339                                                                 
+                                                                                                      
+                                                                                                      
+oficio83                       -0.925                                                                 
+                                                                                                      
+                                                                                                      
+oficio84                       -0.985                                                                 
+                                                                                                      
+                                                                                                      
+oficio85                       -0.903                                                                 
+                                                                                                      
+                                                                                                      
+oficio86                       -0.833                                                                 
+                                                                                                      
+                                                                                                      
+oficio87                       -0.971                                                                 
+                                                                                                      
+                                                                                                      
+oficio88                       -1.600                                                                 
+                                                                                                      
+                                                                                                      
+oficio89                       -0.881                                                                 
+                                                                                                      
+                                                                                                      
+oficio90                       -0.808                                                                 
+                                                                                                      
+                                                                                                      
+oficio91                       -1.043                                                                 
+                                                                                                      
+                                                                                                      
+oficio92                       -0.843                                                                 
+                                                                                                      
+                                                                                                      
+oficio93                       -1.142                                                                 
+                                                                                                      
+                                                                                                      
+oficio94                       -1.756                                                                 
+                                                                                                      
+                                                                                                      
+oficio95                       -0.903                                                                 
+                                                                                                      
+                                                                                                      
+oficio96                       -0.184                                                                 
+                                                                                                      
+                                                                                                      
+oficio97                       -1.056                                                                 
+                                                                                                      
+                                                                                                      
+oficio98                       -0.892                                                                 
+                                                                                                      
+                                                                                                      
+oficio99                       -1.123                                                                 
+                                                                                                      
+                                                                                                      
+age:maxEducLevel2              -0.004                                                                 
+                                                                                                      
+                                                                                                      
+age:maxEducLevel3              0.001                                                                  
+                                                                                                      
+                                                                                                      
+age:maxEducLevel4              0.007                                                                  
+                                                                                                      
+                                                                                                      
+age:maxEducLevel5              0.013                                                                  
+                                                                                                      
+                                                                                                      
+age:maxEducLevel6              0.021                                                                  
+                                                                                                      
+                                                                                                      
+age:estrato12                  0.002                                                                  
+                                                                                                      
+                                                                                                      
+age:estrato13                  0.001                                                                  
+                                                                                                      
+                                                                                                      
+age:estrato14                  -0.002                                                                 
+                                                                                                      
+                                                                                                      
+age:estrato15                  0.010                                                                  
+                                                                                                      
+                                                                                                      
+age:estrato16                  0.003                                                                  
+                                                                                                      
+                                                                                                      
+res_s_a                                                  -0.197***                  -0.197***         
+                                                          (0.012)                    (0.004)          
+                                                                                                      
+Constant                     14.737***                                                                
+                              (0.273)                                                                 
+                                                                                                      
+------------------------------------------------------------------------------------------------------
+Observations                   16,397                      16,397                     16,397          
+R2                             0.459                       0.015                      0.015           
+Adjusted R2                    0.456                       0.015                      0.015           
+Residual Std. Error      0.662 (df = 16295)          0.660 (df = 16396)         0.660 (df = 16396)    
+F Statistic         136.819*** (df = 101; 16295) 252.425*** (df = 1; 16396) 252.425*** (df = 1; 16396)
+======================================================================================================
+Note:                                                                      *p<0.1; **p<0.05; ***p<0.01
