@@ -1,4 +1,3 @@
-##### PROBLEM SET 1 - SCRIPT ##### 
 ## Authors: Juan José Rincón , Juan Andres Ospina, Juanita Chacón 
 ## Description: development of 1 problem set of Big Data and Machine Leanring for applied economics course at Universidad de los Andes 2022-2
 ## Creation Date: 25/08/2022
@@ -15,9 +14,9 @@ dir_set <- function(){
   if(Sys.info()["user"]=="JuanJose"){
     setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1/GitHub")
   }
-  else if("/Users/PC-portatil"%in%getwd()){
-  setwd("")
-  }
+ ifelse(Sys.info()["user"]==PC-PORTATIL):
+  setwd("C:\Users\PC-PORTATIL\OneDrive\Documentos\GitHub\Problem-set1-BigData-ML-Uniandes")
+  
   else{
   setwd("C:/Users/Usuario/Documents/GitHub/Problem-set1-BigData-ML-Uniandes/stores")
   }
@@ -50,9 +49,6 @@ if ("GEIH_2018.RData"%in%list.files(path = "./stores")){
   write.csv(GEIH_2018,file = "stores/GEIH_2018.csv",fileEncoding = "UTF-8")
   
 }
-
-
-
 
 
         ##### 1.a.2  Describe data #####
@@ -596,7 +592,8 @@ GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018$age2<-GEIH_2018$age^2
 GEIH_2018<-GEIH_2018%>%
   mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
-
+estrato<-destring(estrato1)
+educacion<-destring(maxEducLevel)
 ## guardamos la base de datos limpia 
 write.csv(GEIH_2018,file = "stores/GEIH_2018_clean.csv",fileEncoding = "UTF-8")
 
@@ -760,13 +757,13 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 
 
 ##MODELO CON CONTROLES 
-edad_educacion<-(GEIH_2018$maxEducLevel* GEIH_2018$age)
-edad_sexo<-(GEIH_2018$age*GEIH_2018$sexo)
+
+edad_educacion<-(GEIH_2018$educacion*GEIH_2018$age)
+edad_sexo<-(GEIH_2018$age*GEIH_2018$Mujer)
 edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
 
-Model3.m.c <-  subset(GEIH_2018, select = c(edad_educacion, edad_sexo,edad_estrato))
 
-model3<-lm(ln_y~sex+age+estrato1+maxEducLevel, Model3.m.c)
+model3<-lm(ln_y~sex+age+estrato1+maxEducLevel+edad_educacion+edad_estrato+edad_sexo, Model3.m.c)
 
 ##MODELO CON WFL 
 require("tidyverse")
@@ -779,31 +776,36 @@ GEIH_2018$res_y_a<-1
 GEIH_2018$res_s_a<-1
 
 GEIH_2018<-GEIH_2018%>% 
-  mutate(res_y_a=lm(ln_y~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
-         res_s_a=lm(sex~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
-         )
+  res_y_a=lm(ln_y~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
+  res_s_a=lm(sex~age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)$residuals,
+         
 
 reg2<-lm(res_y_a~res_s_a-1,GEIH_2018)
-stargazer(reg1,reg2,type="text")
+stargazer(model1,title="fwl", out=file.path(getwd(),"/views/FWL.txt"),out.header = T, type = "text")
 
 
 #MODELO CON BOOT ##sacar el error 
-set.seed(50)
+set.seed(1000)
 eta.mod6.fn<-function(data,index,age_var=mean(GEIH_2018$age), age2_var=mean (GEIH_2018$age2)){
   f<--lm(ln_y~sex+age+estrato1+maxEducLevel+oficio+edad_educacion+edad_sexo+edad_estrato,GEIH_2018)
   coefs<-f$coefficients
   b1<-coefs[2]
   b2<-coefs[3]
-  
+  res <- f$residuals
+  return(res)
 }
+bootbeta<- boot (GEIH_2018, eta.mod6.fn,R=1000)
 
-bootreg<- boot (GEIH_2018, eta.mod6.fn,R=1000)
-summary (bootcor)
+b0_lwr <-boot.ci(bootbeta,type = "basic",index = 1)[[4]][[4]]
+b0_upr <-boot.ci(bootbeta,type = "basic",index = 1)[[4]][[5]]
+b1_lwr <-boot.ci(bootbeta,type = "basic",index = 2)[[4]][[4]]
+b1_upr <-boot.ci(bootbeta,type = "basic",index = 2)[[4]][[5]]
+b2_lwr <-boot.ci(bootbeta,type = "basic",index = 3)[[4]][[4]]
+b2_upr <-boot.ci(bootbeta,type = "basic",index = 3)[[4]][[5]]
 
 
-
-
-
+Model2.1.m$ln_y_fitted_lwr <- (b0_lwr + b1_lwr*Model2.1.m$age + b2_lwr*Model2.1.m$age2 + b3_lwr*Model2.1.m$Mujer+ res_lwr)
+Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.m$age2 + b3_upr*Model2.1.m$Mujer+ res_upr)
 
 
 

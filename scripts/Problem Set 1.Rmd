@@ -4,6 +4,9 @@ author: "Juan JosÃ© RincÃ³n, Juanita ChacÃ³n , AndrÃ©s Opina"
 date: "`r Sys.Date()`"
 output: pdf_document
 ---
+```{r}
+
+```
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(include = FALSE)
@@ -31,15 +34,15 @@ pacman:: p_load(rvest, tidyverse, skimr, stargazer)
 
 ```
 
-## Introducción
+## Introducci?n
 
-En este Problem Set se busca predecir el ingreso de los ciudadanos de Bogotá como el resultado del procesamiento de la Gran Encuesta Integrada de Hogares (GEIH) para 2018 con herramientas de econometría, Big Data y Machine Learning.
+En este Problem Set se busca predecir el ingreso de los ciudadanos de Bogot? como el resultado del procesamiento de la Gran Encuesta Integrada de Hogares (GEIH) para 2018 con herramientas de econometr?a, Big Data y Machine Learning.
 
-Este documento se encuentra dividido en cuatro secciones: La primera consiste en el procesamiento de los datos, su carga, descripción, limpieza y la descripción de la base final que se utilizará, la segunda parte utiliza un modelo econométrico que usa la edad para explicar el ingreso individual. la tercera parte contiene un modelo econometrico que involucra el género para explotar las brechas salariales y explicar el ingreso individual, y la última parte consiste en un...
+Este documento se encuentra dividido en cuatro secciones: La primera consiste en el procesamiento de los datos, su carga, descripci?n, limpieza y la descripci?n de la base final que se utilizar?, la segunda parte utiliza un modelo econom?trico que usa la edad para explicar el ingreso individual. la tercera parte contiene un modelo econometrico que involucra el g?nero para explotar las brechas salariales y explicar el ingreso individual, y la ?ltima parte consiste en un...
 
 ## Primera parte
 
-### Carga de datos y descripción inicial
+### Carga de datos y descripci?n inicial
 
 ```{r web scraping, eval=FALSE, include=FALSE}
 problem_set_URL <- paste0("https://ignaciomsarmiento.github.io/GEIH2018_sample/pages/geih_page_",1:10,".html")
@@ -62,17 +65,17 @@ load("stores/GEIH_2018.RData")
 
 #### Carga de datos (Web Scraping)
 
-Los sets de datos utilizados como insumos consisten en una serie de diez archivos parciales de la GEIH, realizada por el Departamento Nacional de Estadística (DANE) en 2018. En esta base sólo se cuenta con información de ciudadanos de Bogotá.
+Los sets de datos utilizados como insumos consisten en una serie de diez archivos parciales de la GEIH, realizada por el Departamento Nacional de Estad?stica (DANE) en 2018. En esta base s?lo se cuenta con informaci?n de ciudadanos de Bogot?.
 
-Por tanto, para comenzar se hizo web scraping de los diez archivos en formato html con el fin de descargar los datos, set por set, y así poder pegarlos una vez se tenían todos.
+Por tanto, para comenzar se hizo web scraping de los diez archivos en formato html con el fin de descargar los datos, set por set, y as? poder pegarlos una vez se ten?an todos.
 
-Como resutado, se obtuvo un data set con 32177 observaciones, una para cada hogar encuestado en Bogotá, cabe decir que cada encuesta se realiza a una sola persona por hogar, así que cada encuesta se puede asociar a un individuo.
+Como resutado, se obtuvo un data set con 32177 observaciones, una para cada hogar encuestado en Bogot?, cabe decir que cada encuesta se realiza a una sola persona por hogar, as? que cada encuesta se puede asociar a un individuo.
 
-La encuesta cuenta con 178 variables, correspondientes a preguntas que se realizan al individuo. No obstante, para este ejercicio sólo nos interesa usar las variables de edad, sexo, educación, tipo de sistema de seguridad socia, empleo, área profesional de empleo, diferentes tipos de ingreso (laboral, rentas, pensiones, etc.). Sin embargo, hay varias preguntas que sólo se responden por algunos de los encuestados, generando un gran número de missing values. Por ejemplo, la variable P6580 se refiere a la pregunta "¿el mes pasado recibía bonificaciones?", entonces sólo aquellas preguntas que respondan sí podrán contestar preguntas subsiguientes como la P6580s1 "¿Cuánto recibió por bonificaciones?".
+La encuesta cuenta con 178 variables, correspondientes a preguntas que se realizan al individuo. No obstante, para este ejercicio s?lo nos interesa usar las variables de edad, sexo, educaci?n, tipo de sistema de seguridad socia, empleo, ?rea profesional de empleo, diferentes tipos de ingreso (laboral, rentas, pensiones, etc.). Sin embargo, hay varias preguntas que s?lo se responden por algunos de los encuestados, generando un gran n?mero de missing values. Por ejemplo, la variable P6580 se refiere a la pregunta "?el mes pasado recib?a bonificaciones?", entonces s?lo aquellas preguntas que respondan s? podr?n contestar preguntas subsiguientes como la P6580s1 "?Cu?nto recibi? por bonificaciones?".
 
-En conclusión, este set de datos trae consigo bastantes preguntas sobre cuáles variables son las más apropiadas para el análisis por la confiablidad de los resultados que se puede obtener con base en el número de observaciones con que se cuente y la facilidad de su análisis económico. En conculisión, es necesario hacer una descripción juiciosa de los datos para poder seleccionar las variables correctas.
+En conclusi?n, este set de datos trae consigo bastantes preguntas sobre cu?les variables son las m?s apropiadas para el an?lisis por la confiablidad de los resultados que se puede obtener con base en el n?mero de observaciones con que se cuente y la facilidad de su an?lisis econ?mico. En conculisi?n, es necesario hacer una descripci?n juiciosa de los datos para poder seleccionar las variables correctas.
 
-#### Limpieza y descripción de datos.
+#### Limpieza y descripci?n de datos.
 ```{r Data Cleaning, echo=FALSE, warning=FALSE}
 
 GEIH_2018<-GEIH_2018%>%
@@ -81,28 +84,28 @@ GEIH_2018<-GEIH_2018%>%
 skim(GEIH_2018)
 
 ```
-La limpieza de los datos se inicia con filtrar a los ciudadanos que son mayores de 18 años, por lo que se debe cumplir con la condición de que la variable _age_ sea estrictamente mayor a 18.
+La limpieza de los datos se inicia con filtrar a los ciudadanos que son mayores de 18 a?os, por lo que se debe cumplir con la condici?n de que la variable _age_ sea estrictamente mayor a 18.
 
 Posteriormente, se procede a 
 
 
 ##2.Edad e Ingreso
 
-La base de datos cuenta con numerosas variables de ingreso, estas están desagregadas por tipo de ingreso. Entre ellas se buscó una variable que tuviera una construcción robusta sobre los ingresos, donde el salario fuera implicado para los fines de este trabajo. Con base en ello se encontró la variable y_total_m, la cual cuenta con un porcentaje significativo de missing values. Esta variable se estandarizó para centrar su distribución y para completar los missing values se recurrió a rellenarlos con una estratificación por sexo, de tal manera que los hombres con esta variable en missing tuvieran un ingreso asignado igual al promedio del ingreso de los hombres de la base, y para las mujeres, que ellas tuvieran un promedio para el ingreso de las mujeres. 
+La base de datos cuenta con numerosas variables de ingreso, estas est?n desagregadas por tipo de ingreso. Entre ellas se busc? una variable que tuviera una construcci?n robusta sobre los ingresos, donde el salario fuera implicado para los fines de este trabajo. Con base en ello se encontr? la variable y_total_m, la cual cuenta con un porcentaje significativo de missing values. Esta variable se estandariz? para centrar su distribuci?n y para completar los missing values se recurri? a rellenarlos con una estratificaci?n por sexo, de tal manera que los hombres con esta variable en missing tuvieran un ingreso asignado igual al promedio del ingreso de los hombres de la base, y para las mujeres, que ellas tuvieran un promedio para el ingreso de las mujeres. 
 
-Posteriormente, se corrió el modelo:
+Posteriormente, se corri? el modelo:
     $Ingreso=\beta_0 + \beta_1*Edad + \beta_2*Edad^2+ u$
     
-Sus resultados se muestran en la tabla a continuación:
+Sus resultados se muestran en la tabla a continuaci?n:
 
 ```{r}
 model1<-lm(ingtot~age+age2,GEIH_2018)
 tab_model(model1, file="model1.html")
 ```
 
- El coeficiente $\beta_1$ es positivo, lo que indica que un año de edad incrementa marginalmente el ingreso de un individuo mayor de 18 años. De modo contrario, el coeficiente $\beta_2$ tiene un signo negativo, indicando que existe una concavidad en la función polinómica de segundo grado, tal que se puede encontrar un punto máximo del ingreso en función de la edad. Finalmente, el coeficiente $\beta_0$ es negativo, para poder analizar este estimador se debe tener en cuenta que la variable _age_ tiene un mínimo en 19, por lo que no es que haya un ingreso base negativo, sino que como la edad comienza en un valor positivo, este intercepto nunca tomará el valor del ingreso en una estimación de variable dependiente, sino que será una parte de ajuste del modelo a los datos teniendo en cuenta los otros dos estimadores.
+ El coeficiente $\beta_1$ es positivo, lo que indica que un a?o de edad incrementa marginalmente el ingreso de un individuo mayor de 18 a?os. De modo contrario, el coeficiente $\beta_2$ tiene un signo negativo, indicando que existe una concavidad en la funci?n polin?mica de segundo grado, tal que se puede encontrar un punto m?ximo del ingreso en funci?n de la edad. Finalmente, el coeficiente $\beta_0$ es negativo, para poder analizar este estimador se debe tener en cuenta que la variable _age_ tiene un m?nimo en 19, por lo que no es que haya un ingreso base negativo, sino que como la edad comienza en un valor positivo, este intercepto nunca tomar? el valor del ingreso en una estimaci?n de variable dependiente, sino que ser? una parte de ajuste del modelo a los datos teniendo en cuenta los otros dos estimadores.
  
- Posteriormente, se analizó que la teoría indica que hay un máximo en el ingreso alrededor de los 50 años, y al realizar la optimización algebráica con los parámetros de la estimación e implementar bootstrap para determinar un intervalo de confianza, se puede evidenciar que, con la información de la base de datos y el modelo planteado, con un 95% de confianza, la edad que maximiza el ingreso de los individuos se encuentre entre el siguiente intervalo.
+ Posteriormente, se analiz? que la teor?a indica que hay un m?ximo en el ingreso alrededor de los 50 a?os, y al realizar la optimizaci?n algebr?ica con los par?metros de la estimaci?n e implementar bootstrap para determinar un intervalo de confianza, se puede evidenciar que, con la informaci?n de la base de datos y el modelo planteado, con un 95% de confianza, la edad que maximiza el ingreso de los individuos se encuentre entre el siguiente intervalo.
  
  
  
