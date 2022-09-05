@@ -13,11 +13,9 @@ rm(list=ls())
 dir_set <- function(){
   if(Sys.info()["user"]=="JuanJose"){
     setwd("/Users/JuanJose/Library/CloudStorage/OneDrive-UniversidaddelosAndes/Uniandes/9 Semestre - 1 PEG/Big Data/Problems Set/Problem Set 1/GitHub")
-  }
- ifelse(Sys.info()["user"]==PC-PORTATIL):
-  setwd("C:\Users\PC-PORTATIL\OneDrive\Documentos\GitHub\Problem-set1-BigData-ML-Uniandes")
-  
-  else{
+  }else if(Sys.info()["user"]=="PC-PORTATIL"){
+   setwd("C:/Users/PC-PORTATIL/OneDrive/Documentos/GitHub/Problem-set1-BigData-ML-Uniandes")
+ }else{
   setwd("C:/Users/Usuario/Documents/GitHub/Problem-set1-BigData-ML-Uniandes/stores")
   }
 }
@@ -124,7 +122,7 @@ sexo_PG <- ggplot(data=GEIH_2018) +
                              ) , name = "")+
   labs(title = "Sexo")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
   
 
 estrato_PG <-ggplot(data=GEIH_2018) +
@@ -140,7 +138,7 @@ estrato_PG <-ggplot(data=GEIH_2018) +
                               ) , name = "")+
   labs(title = "Estrato de la vivienda")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 NivelEducativo_BG <- ggplot(data=GEIH_2018) +
   geom_bar(stat="identity",aes(y=dummy, x=maxEducLevel, fill = maxEducLevel), width = 0.5)+
@@ -155,7 +153,7 @@ NivelEducativo_BG <- ggplot(data=GEIH_2018) +
                     name = "")+
   labs(title = "Máximo Nivel Educativo alcanzado")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 college_PG <- ggplot(data=GEIH_2018) +
   geom_bar(aes(x = 1, weight = dummy, fill = college),width = 1)+
@@ -166,7 +164,7 @@ college_PG <- ggplot(data=GEIH_2018) +
                     ) , name = "")+
   labs(title = "Tiene educación terciaria")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 GEIH_2018$regSalud_nan=GEIH_2018$regSalud
 GEIH_2018$regSalud_nan<-as.character(GEIH_2018$regSalud_nan)
@@ -185,7 +183,7 @@ regSalud_PG <- ggplot(data=GEIH_2018) +
                     name = "")+
   labs(title = "Regimen de Seguridad Social en Salud")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 cotPension_PG <- ggplot(data=GEIH_2018) +
   geom_bar(aes(x = 1, weight = dummy, fill = cotPension),width = 1)+
@@ -199,7 +197,7 @@ cotPension_PG <- ggplot(data=GEIH_2018) +
                     name = "",na.translate=T)+
   labs(title = "Estado Pensional")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 relab_BG <- ggplot(data=GEIH_2018) +
   geom_bar(stat="identity",aes(y=dummy, x=relab, fill = relab), width = 0.5)+
@@ -217,7 +215,7 @@ relab_BG <- ggplot(data=GEIH_2018) +
                      name = "")+
   labs(title = "Relación Laboral")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 
@@ -232,7 +230,7 @@ sizeFirm_BG <-ggplot(data=GEIH_2018) +
                     ) , name = "")+
   labs(title = "Tamaño de la empresa")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 formal_PG <- ggplot(data=GEIH_2018) +
@@ -244,7 +242,7 @@ formal_PG <- ggplot(data=GEIH_2018) +
                     ) , name = "")+
   labs(title = "Formal")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 
@@ -257,7 +255,7 @@ cuentaPropia_PG <- ggplot(data=GEIH_2018) +
                     ) , name = "")+
   labs(title = "Independientes (cuenta propia)")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 microEmpresa_PG <- ggplot(data=GEIH_2018) +
@@ -269,7 +267,7 @@ microEmpresa_PG <- ggplot(data=GEIH_2018) +
                     ) , name = "")+
   labs(title = "Micro Empresa")+
   theme_void()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 caractPersona_plot<- plot_grid(sexo_PG,estrato_PG,NivelEducativo_BG,college_PG,regSalud_PG, ncol = 2, nrow = 3)
@@ -295,7 +293,7 @@ age_hist <- ggplot(GEIH_2018, aes(x=age)) +
                                ))+
   labs(title="Edad",x="Edad",y="densidad")+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 totalHoursWorked_hist <- ggplot(GEIH_2018, aes(x=totalHoursWorked)) +
@@ -309,7 +307,7 @@ totalHoursWorked_hist <- ggplot(GEIH_2018, aes(x=totalHoursWorked)) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$totalHoursWorked,na.rm = T)+sd(GEIH_2018$totalHoursWorked,na.rm = T),2)),"= +1 sd")
                      ))+
   labs(title="Horas trabajadas a la semana",x="",y="densidad")+
-  theme_minimal()+theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme_minimal()+theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 
 numerical_plot<- plot_grid(age_hist, totalHoursWorked_hist, ncol = 2, nrow = 1)
@@ -335,7 +333,7 @@ impa_hist <- ggplot(GEIH_2018, aes(x=impa/(1000000))) +
   labs(title = "Ingreso actividad principal",x="Ingreso monetario actividad principal",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 impa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -358,7 +356,7 @@ isa_hist <- ggplot(GEIH_2018, aes(x=isa/(1000000))) +
   labs(title = "Ingreso actividad secundaria",x="Ingreso monetario actividad secundaria",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 isa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -381,7 +379,7 @@ salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
   labs(title = "Salario actividad principal",x="Salario actividad principal",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 salary_point <- ggplot(GEIH_2018, aes(y=y_salary_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -404,7 +402,7 @@ ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
   labs(title = "Salario laboral",x="Salario laboral",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 ingLab_point <- ggplot(GEIH_2018, aes(y=y_ingLab_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -427,7 +425,7 @@ y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
   labs(title= "Salario + ingreso independientes",x="Salario + ingreso independientes",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 y_total_point <- ggplot(GEIH_2018, aes(y=y_total_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -449,7 +447,7 @@ gananciaIndep_hist <- ggplot(GEIH_2018, aes(x=y_gananciaIndep_m/(1000000))) +
   labs(title= "Ganancia total independientes",x="Ganancia total independientes",y="densidad",caption="$COP En millones mensuales")+
   xlim(-1,20)+
   theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
+  theme(plot.title = element_text(hjust = 0.5,size=24,face="bold"),legend.text = element_text(size = 18))
 
 gananciaIndep_point <- ggplot(GEIH_2018, aes(y=y_gananciaIndep_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
@@ -563,7 +561,7 @@ write.table(sumstat, file = "views/sumstats after nan imputing.txt", sep = ",", 
 GEIH_2018<-subset(GEIH_2018, select = -c(mf_regSalud,regSalud_nan,mean_impa,mean_y,dummy,mf_MaxEducLevel ))
 skim=skim(GEIH_2018)
 sumstat_maxEducLevel<-as.data.frame(prop.table(table(GEIH_2018$maxEducLevel)))%>%
-  mutate(maxEducLevel= case_when(Var1==1~"Ninguno",Var1==2~"Primaria incompelta",Var1==3~"Primaria completa",Var1==4~"Secundaria incompleta",Var1==5~"Secundaria completa",Var1==6~"Superior o universitaria"),
+  mutate(maxEducLevel= case_when(Var1==1~"Ninguno",Var1==2~"Primaria incompleta",Var1==3~"Primaria completa",Var1==4~"Secundaria incompleta",Var1==5~"Secundaria completa",Var1==6~"Superior o universitaria"),
          Freq=round(Freq,2))
 
 sumstat_regSalud<-as.data.frame(prop.table(table(GEIH_2018$regSalud)))%>%
@@ -813,12 +811,12 @@ Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.
 ######### 4. predicts earnings ##########
 # nuevas variables 
 GEIH_2018$lneduc<-log(as.numeric(GEIH_2018$maxEducLevel))
-GEIH_2018$sex_age<-as.numeric(GEIH_2018$sex)*GEIH_2018$age
-GEIH_2018$sex_ed<-as.numeric(GEIH_2018$sex)*as.numeric(GEIH_2018$maxEducLevel)
+GEIH_2018<-GEIH_2018%>%mutate(Mujer= case_when(GEIH_2018$sex=="0"~1,GEIH_2018$sex=="1"~0))                 
+GEIH_2018$Mujer_age<-GEIH_2018$Mujer*GEIH_2018$age
+GEIH_2018<-GEIH_2018%>%mutate(Mujer_ed = ifelse(test = GEIH_2018$Mujer==1,yes = GEIH_2018$maxEducLevel,no = "0"))
 GEIH_2018$hwork2<-(GEIH_2018$totalHoursWorked)^2 
-GEIH_2018$sizefirm<-as.numeric(GEIH_2018$sizeFirm)
-GEIH_2018$propiasizefirm<-as.numeric(GEIH_2018$cuentaPropia)*GEIH_2018$sizefirm
-GEIH_2018$relab_formal<-as.numeric(GEIH_2018$relab)*as.numeric(GEIH_2018$formal)
+GEIH_2018 = GEIH_2018 %>% mutate(relab_formal = ifelse(test = GEIH_2018$formal=="1",yes = GEIH_2018$relab,no = 0))
+GEIH_2018 = GEIH_2018 %>% mutate(propiasizefirm = ifelse(test = GEIH_2018$cuentaPropia=="1",yes = GEIH_2018$sizefirm,no = 0))
 
 #4.1
 #Partir la muestra
@@ -832,19 +830,19 @@ train<-GEIH_2018[GEIH_2018$holdout==F,]
 
 #4.2
 #Modelos
-mod_41<-lm(ln_y~age+age2+sex+lneduc,GEIH_2018)
-mod_42<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,GEIH_2018)
-mod_43<-lm(ln_y~+age+age2+sex_age+lneduc,GEIH_2018)
-mod_44<-lm(ln_y~+age+age2+sex_age+sex_ed+regSalud,GEIH_2018)
-mod_45<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2,GEIH_2018)
-mod_46<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+formal+ relab*formal+cuentaPropia+sizefirm+cuentaPropia*sizefirm,GEIH_2018)
+mod_41<-lm(ln_y~age+age2+Mujer+lneduc,GEIH_2018)
+mod_42<-lm(ln_y~age+age2+Mujer+maxEducLevel+estrato1,GEIH_2018)
+mod_43<-lm(ln_y~+age+age2+Mujer_age+lneduc,GEIH_2018)
+mod_44<-lm(ln_y~+age+age2+Mujer_age+Mujer_ed+regSalud,GEIH_2018)
+mod_45<-lm(ln_y~+age+age2+Mujer+totalHoursWorked + hwork2,GEIH_2018)
+mod_46<-lm(ln_y~+age+age2+Mujer+totalHoursWorked + hwork2+ relab+formal+relab_formal+cuentaPropia+sizefirm+propiasizefirm,GEIH_2018)
 
 
 #Resultados
 tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text",out = "views/modelos en muestra p4.text")# revisar como guardar solo el y_hat, y los errores 
 
 #Poder predictivo
-mod_41<-lm(ln_y~sex-1,data=train)
+mod_41<-lm(ln_y~Mujer-1,data=train)
 test$mod_41<-predict(mod_41,newdata = test)
 test$se_41<-(test$ln_y-test$mod_41)^2
 mse_41<-summary(test$se_41)[4]
@@ -854,42 +852,42 @@ test$mod_42<-predict(mod_42,newdata = test)
 test$se_42<-(test$ln_y-test$mod_42)^2
 mse_42<-summary(test$se_42)[4]
 
-mod_43<-lm(ln_y~age+age2+sex,data=train)
+mod_43<-lm(ln_y~age+age2+Mujer,data=train)
 test$mod_43<-predict(mod_43,newdata = test)
 test$se_43<-(test$ln_y-test$mod_43)^2
 mse_43<-summary(test$se_43)[4]
 
-mod_44<-lm(ln_y~age+age2+sex+lneduc,data=train)
+mod_44<-lm(ln_y~age+age2+Mujer+lneduc,data=train)
 test$mod_44<-predict(mod_44,newdata = test)
 test$se_44<-(test$ln_y-test$mod_44)^2
 mse_44<-summary(test$se_44)[4]
 
-mod_45<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=train)
+mod_45<-lm(ln_y~age+age2+Mujer+maxEducLevel+estrato1,data=train)
 test$mod_45<-predict(mod_45,newdata = test)
 test$se_45<-(test$ln_y-test$mod_45)^2
 mse_45<-summary(test$se_45)[4]
 
-mod_46<-lm(ln_y~age+age2+sex_age+lneduc,data=train)
+mod_46<-lm(ln_y~+age+age2+Mujer_age+lneduc,data=train)
 test$mod_46<-predict(mod_46,newdata = test)
 test$se_46<-(test$ln_y-test$mod_46)^2
 mse_46<-summary(test$se_46)[4]
 
-mod_47<-lm(ln_y~age+age2+sex_age+sex_ed+regSalud,data=train)
+mod_47<-lm(ln_y~age+age2+Mujer_age+Mujer_ed+regSalud,data=train)
 test$mod_47<-predict(mod_47,newdata = test)
 test$se_47<-(test$ln_y-test$mod_47)^2
 mse_47<-summary(test$se_47)[4]
 
-mod_48<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2,data=train)
+mod_48<-lm(ln_y~age+age2+Mujer+totalHoursWorked + hwork2,data=train)
 test$mod_48<-predict(mod_48,newdata = test)
 test$se_48<-(test$ln_y-test$mod_48)^2
 mse_48<-summary(test$se_48)[4]
 
-#mod_49<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2 + relab+formal+ relab_formal+cuentaPropia+sizefirm+propiasizefirm,data=train)
-#test$mod_49<-predict(mod_49,newdata = test)
-#mse_49<-summary(test$se_49)[4]
-#test$se_49<-(test$ln_y-test$mod_49)^2
+mod_49<-lm(ln_y~age+age2+Mujer+totalHoursWorked + hwork2 +oficio+formal,data=train)
+test$mod_49<-predict(mod_49,newdata = test)
+mse_49<-summary(test$se_49)[4]
+test$se_49<-(test$ln_y-test$mod_49)^2
 
-mse<-table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48)#, mse_49)
+mse<-table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48, mse_49)
 write.table(mse, file = "views/mse.txt", sep = ",", quote = FALSE, row.names = F)
 
 saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
@@ -897,23 +895,45 @@ saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
 #GEIH_2018<-readRDS(file =paste0(getwd(),"/GEIH_2018_4.rds"))
 
 ## 4.3. influence statistic
-mod_41<-lm(ln_y~sex-1,data=test)
+mod_41<-lm(ln_y~Mujer-1,data=test)
 mod_42<-lm(ln_y~age+age2,data=test)
-mod_43<-lm(ln_y~age+age2+sex,data=test)
-mod_44<-lm(ln_y~age+age2+sex+lneduc,data=test)
-mod_45<-lm(ln_y~age+age2+sex+maxEducLevel+estrato1,data=test)
-mod_46<-lm(ln_y~age+age2+sex_age+lneduc,data=test)
-mod_47<-lm(ln_y~age+age2+sex_age+sex_ed+regSalud,data=test)
-mod_48<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2,data=test)
+mod_43<-lm(ln_y~age+age2+Mujer,data=test)
+mod_44<-lm(ln_y~age+age2+Mujer+lneduc,data=test)
+mod_45<-lm(ln_y~age+age2+Mujer+maxEducLevel+estrato1,data=test)
+mod_46<-lm(ln_y~+age+age2+Mujer_age+lneduc,data=test)
+mod_47<-lm(ln_y~age+age2+Mujer_age+Mujer_ed+regSalud,data=test)
+mod_48<-lm(ln_y~age+age2+Mujer+totalHoursWorked + hwork2,data=test)
 
-#dfb_41=dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE))
-#dfb_42=dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE))
-#dfb_43=dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE))
-#dfb_44=dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE))
-#dfb_45=dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE))
-#dfb_46=dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE))
-#dfb_47=dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE))
-#dfb_48=dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE))
+dfb_41=as.data.frame(dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE)))
+dfb_42=as.data.frame(dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE)))
+dfb_43=as.data.frame(dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE)))
+dfb_44=as.data.frame(dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE)))
+dfb_45=as.data.frame(dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE)))
+dfb_46=as.data.frame(dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE)))
+dfb_47=as.data.frame(dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE)))
+dfb_48=as.data.frame(dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE)))
+
+#stargazer(dfb_41, title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#        covariate.labels=c("Mujer","Hombre"),out = "views/dfb_41.txt",notes = "Modelo 4.1")
+#stargazer(dfb_42, title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2"),out = "views/dfb_42.txt",notes = "Modelo 4.2")
+#stargazer(dfb_43, title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre"),out = "views/dfb_43.txt",notes = "Modelo 4.3")
+#stargazer(dfb_44,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre","ln Educ"),out = "views/dfb_44.txt",notes = "Modelo 4.4")
+#stargazer(dfb_45,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2","Hombre","primaria incompleta","Primaria completa",
+#                             "secundaria incompleta","secundaria completa","Educ superior","Estrato 2",
+#                             "Estrato 3","Estrato 4","Estrato 5","Estrato 6"),out = "views/dfb_45.txt",notes = "Modelo 4.5")
+#stargazer(dfb_46,  title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2","Edad*Hombre","ln Educ"),out = "views/dfb_46.txt",notes = "Modelo 4.6")
+#stargazer(dfb_47, title = "Influencia observaciones sobre los coeficientes", type = "text", 
+#          covariate.labels=c("Intercepto","Edad","Edad2","Edad*Hombre","primaria incompleta","Primaria completa",
+#                             "secundaria incompleta","secundaria completa","Educ superior","Estrato 2",
+#                             "Estrato 3","Estrato 4","Estrato 5","Estrato 6"),out = "views/dfb_47.txt",notes = "Modelo 4.5")
+#stargazer(dfb_48, type = "text")
+
+
 
 dffits_41= as.data.frame(dffits(mod_41))
 dffits_42= as.data.frame(dffits(mod_42))
@@ -926,30 +946,31 @@ dffits_48= as.data.frame(dffits(mod_48))
 dffits=cbind(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
 rm(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
 
-hist(dffits$`dffits(mod_41)`)
-hist(dffits$`dffits(mod_42)`)
-hist(dffits$`dffits(mod_43)`)
-hist(dffits$`dffits(mod_44)`)
-hist(dffits$`dffits(mod_45)`)
-hist(dffits$`dffits(mod_46)`)
-hist(dffits$`dffits(mod_47)`)
-hist(dffits$`dffits(mod_48)`)
+stargazer(dffits, type = "text",title = "Influencia observaciones sobre la predicción",
+covariate.labels=c("Modelo 4.1","Modelo 4.2","Modelo 4.3","Modelo 4.4","Modelo 4.5","Modelo 4.6","Modelo 4.7","Modelo 4.8"),out = "views/dffits.txt")
 
 
   ## 4.4 Validacion cruzada
 # Se usan los modelos 5 y 7 porque son los que tienen menor error 
 
 ctrl <- trainControl(method = "LOOCV")
-model1 <- train(ln_y~age+age2+sex+estrato1+maxEducLevel, data = GEIH_2018, method = "lm", trControl = ctrl)
-model2 <- train(ln_y~+age+age2+sex_age+sex_ed+regSalud, data = GEIH_2018, method = "lm", trControl = ctrl)
+model1 <- train(ln_y~age+age2+Mujer+maxEducLevel+estrato1, data = GEIH_2018, method = "lm", trControl = ctrl)
+model2 <- train(ln_y~age+age2+Mujer_age+Mujer_ed+regSalud, data = GEIH_2018, method = "lm", trControl = ctrl)
 
 mdl_1_results=as.data.frame(table(model1$results['intercept'],model1$results['RMSE'],model1$results['Rsquared'],model1$results['MAE']))
 mdl_1_results['Freq']<-mean(model1$pred$pred)
 mdl_1_results<- rename(mdl_1_results, "Intercepto"="Var1","RMSE"="Var2","R^2"="Var3","MAE"="Var4","Prediccion promedio"="Freq")
-write.table(mdl_1_results, file = "views/mdl_1_results_LOOCV.txt", sep = ",", quote = FALSE, row.names = F)
+sink("views/mdl_1_results_LOOCV.txt")
+print(mdl_1_results)
+sink() 
+
+
+
 
 mdl_2_results=as.data.frame(table(model2$results['intercept'],model2$results['RMSE'],model2$results['Rsquared'],model2$results['MAE']))
 mdl_2_results['Freq']<-mean(model2$pred$pred)
 mdl_2_results<- rename(mdl_2_results, "Intercepto"="Var1","RMSE"="Var2","R^2"="Var3","MAE"="Var4","Prediccion promedio"="Freq")
-write.table(mdl_1_results, file = "views/mdl_2_results_LOOCV.txt", sep = ",", quote = FALSE, row.names = F)
+sink("views/mdl_2_results_LOOCV.txt")
+print(mdl_2_results)
+sink() 
 

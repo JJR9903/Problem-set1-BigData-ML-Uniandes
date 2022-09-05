@@ -1,0 +1,8 @@
+
+Distribución influencia ibservaciones sobre los coeficientes Modelo 4.1
+===========================================
+Statistic   N   Mean  St. Dev.  Min    Max 
+-------------------------------------------
+Mujer     4,919 0.000  0.0003  -0.002 0.002
+Hombre    4,919 0.000  0.0002  -0.001 0.001
+-------------------------------------------
