@@ -25,8 +25,7 @@ dir_set <- function(){
 
 dir_set()
 
-
-pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot,caret,randomForest,mcspatial )
+pacman:: p_load(rvest, tidyverse, skimr, stargazer,cowplot,car,boot,caret)
 
 
         ##### 1.a Web Scraping data set (GEIH 2018 - Bogotá) ####
@@ -60,8 +59,8 @@ if ("GEIH_2018.RData"%in%list.files(path = "./stores")){
 
 #### Data Cleaning ####
 
-str(GEIH_2018) # structure of dataset
-head(GEIH_2018) # first 6 observations
+#head(GEIH_2018) # first 6 observations
+#str(GEIH_2018) # structure of dataset
 
 ##Filtrar por mayores de edad
 GEIH_2018<-GEIH_2018%>%
@@ -149,7 +148,7 @@ estrato_PG <-ggplot(data=GEIH_2018) +
 
 NivelEducativo_BG <- ggplot(data=GEIH_2018) +
   geom_bar(stat="identity",aes(y=dummy, x=maxEducLevel, fill = maxEducLevel), width = 0.5)+
-  scale_fill_manual( values = c("1"="#9b5fe0" , "3"="#60dbe8","4"="#8bd346","5"="#efdf48","6"="#f9a52c","7"="#d64e12"),
+  scale_fill_manual( values = c("1"="#9b5fe0" ,"2"="#F5B7B1", "3"="#60dbe8","4"="#8bd346","5"="#efdf48","6"="#f9a52c","7"="#d64e12"),
                     label = c("1"=paste(" ",as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['1']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Ninguno")
                               ,"3"=paste(" ",as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['3']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%"," Primaria incompelta")
                               ,"4"=paste(" ",as.character(round(100 * as.numeric(table(GEIH_2018['maxEducLevel'])['4']) / sum(as.numeric(table(GEIH_2018['dummy']))),2)),"%","Primaria completa")
@@ -247,7 +246,7 @@ formal_PG <- ggplot(data=GEIH_2018) +
                     label = c("0"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['formal'])['1']) / sum(as.numeric(table(GEIH_2018['formal']))),2)),"%","No")
                               ,"1"=paste(as.character(round(100 * as.numeric(table(GEIH_2018['formal'])['0']) / sum(as.numeric(table(GEIH_2018['formal']))),2)),"%","Sí")
                     ) , name = "")+
-  labs(title = "formal", subtitle="Seguridad social")+
+  labs(title = "Formal")+
   theme_void()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
@@ -322,9 +321,8 @@ ggsave("views/numerical_plot.png", width = 70, height = 25, units="cm",plot = nu
 
 
 ### Descripción de variables de Ingreso ## 
-# comparación entre variables que dicen cosas parecidas 
-# se escogen algunas y de esas se comparan por edad y sexo 
-# impa, isa, y_salary_m, y_ingLab_m,y_gananciaIndep_m, y_total_m, 
+# comparación entre variables que dicen cosas parecidas se escogen algunas y de esas se comparan por edad
+# impa, isa, y_salary_m, y_ingLab_m,y_gananciaIndep_m, y_total_m
 
 # impa - principal occ.
 impa_hist <- ggplot(GEIH_2018, aes(x=impa/(1000000))) +
@@ -338,18 +336,16 @@ impa_hist <- ggplot(GEIH_2018, aes(x=impa/(1000000))) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$impa/(1000000),na.rm = T)+sd(GEIH_2018$impa/(1000000),na.rm = T),2)),"= +1 sd"),
                                 "missings"=paste(as.character(sum(is.na(GEIH_2018$impa))),"missings")
                      ))+
-  labs(title = "ingreso actividad principal",x="ingreso monetario actividad principal",y="densidad",caption="En millones mensuales")+
-  xlim(-1,40)+
+  labs(title = "Ingreso actividad principal",x="Ingreso monetario actividad principal",y="densidad",caption="$COP En millones mensuales")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 impa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title = "ingreso actividad principal",y="ingreso monetario actividad principal",x="Edad",caption="En millones mensuales")+
+  labs(title = "Ingreso actividad principal",y="Ingreso monetario actividad principal",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
 
 # isa - principal occ.
 isa_hist <- ggplot(GEIH_2018, aes(x=isa/(1000000))) +
@@ -363,18 +359,16 @@ isa_hist <- ggplot(GEIH_2018, aes(x=isa/(1000000))) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$isa/(1000000),na.rm = T)+sd(GEIH_2018$impa/(1000000),na.rm = T),2)),"= +1 sd"),
                                 "missings"=paste(as.character(sum(is.na(GEIH_2018$isa))),"missings")
                      ))+
-  labs(title = "ingreso actividad secundaria",x="ingreso monetario actividad secundaria",y="densidad",caption="En millones mensuales")+
-  xlim(-1,40)+
+  labs(title = "Ingreso actividad secundaria",x="Ingreso monetario actividad secundaria",y="densidad",caption="$COP En millones mensuales")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 isa_point <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title = "ingreso actividad secundaria",y="ingreso monetario actividad secundaria",x="Edad",caption="En millones mensuales")+
+  labs(title = "Ingreso actividad secundaria",y="Ingreso monetario actividad secundaria",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
 
 # y_salary_m - principal occ.
 salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
@@ -388,18 +382,16 @@ salary_hist <- ggplot(GEIH_2018, aes(x=y_salary_m/(1000000))) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$y_salary_m/(1000000),na.rm = T)+sd(GEIH_2018$y_salary_m/(1000000),na.rm = T),2)),"= +1 sd"),
                                 "missings"=paste(as.character(sum(is.na(GEIH_2018$y_salary_m))),"missings")
                      ))+
-  labs(title = "Salario actividad principal",x="Salario actividad principal",y="densidad",caption="En millones mensuales (incluye propinas y comisiones)")+
-  xlim(-1,40)+
+  labs(title = "Salario actividad principal",x="Salario actividad principal",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 salary_point <- ggplot(GEIH_2018, aes(y=y_salary_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title = "Salario actividad principal",y="Salario actividad principal",x="Edad",caption="En millones mensuales (incluye propinas y comisiones)")+
+  labs(title = "Salario actividad principal",y="Salario actividad principal",x="Edad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
 
 # y_ingLab_m - all occ. 
 ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
@@ -413,19 +405,16 @@ ingLab_hist <- ggplot(GEIH_2018, aes(x=y_ingLab_m/(1000000))) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$y_ingLab_m/(1000000),na.rm = T)+sd(GEIH_2018$y_ingLab_m/(1000000),na.rm = T),2)),"= +1 sd"),
                                 "missings"=paste(as.character(sum(is.na(GEIH_2018$y_ingLab_m))),"missings")
                      ))+
-  labs(title = "Salario laboral",x="Salario laboral",y="densidad",caption="En millones mensuales (incluye propinas y comisiones)")+
-  xlim(-1,40)+
+  labs(title = "Salario laboral",x="Salario laboral",y="densidad",caption="$COP En millones mensuales (incluye propinas y comisiones)")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 ingLab_point <- ggplot(GEIH_2018, aes(y=y_ingLab_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title = "Salario laboral",y="Salario laboral",x="Edad", caption="En millones mensuales (incluye propinas y comisiones)")+
+  labs(title = "Salario laboral",y="Salario laboral",x="Edad", caption="$COP En millones mensuales (incluye propinas y comisiones)")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-  
-
   
 #y_total_m - income salaried + independents total
 y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
@@ -439,21 +428,17 @@ y_total_hist <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T)+sd(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= +1 sd"),
                                 "missings"=paste(as.character(sum(is.na(GEIH_2018$y_total_m))),"missings")
                      ))+
-  labs(title= "Salario + ingreso independientes",x="Salario + ingreso independientes",y="densidad",caption="En millones mensuales")+
-  xlim(-1,40)+
+  labs(title= "Salario + ingreso independientes",x="Salario + ingreso independientes",y="densidad",caption="$COP En millones mensuales")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 y_total_point <- ggplot(GEIH_2018, aes(y=y_total_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title= "Salario + ingreso independientes",y="Salario + ingreso independientes",x="Edad",caption="En millones mensuales")+
+  labs(title= "Salario + ingreso independientes",y="Salario + ingreso independientes",x="Edad",caption="$COP En millones mensuales")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
-
-  
 #y_gananciaIndep_m 
 gananciaIndep_hist <- ggplot(GEIH_2018, aes(x=y_gananciaIndep_m/(1000000))) +
   geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
@@ -465,20 +450,16 @@ gananciaIndep_hist <- ggplot(GEIH_2018, aes(x=y_gananciaIndep_m/(1000000))) +
                                 "Media"=paste(as.character(round(mean(GEIH_2018$y_gananciaIndep_m/(1000000),na.rm = T),2)),"= media"),
                                 "+sd"=paste(as.character(round(mean(GEIH_2018$y_gananciaIndep_m/(1000000),na.rm = T)+sd(GEIH_2018$y_gananciaIndep_m/(1000000),na.rm = T),2)),"= +1 sd")
                      ))+
-  labs(title= "Ganancia total independientes",y="densidad",caption="En millones mensuales")+
-  xlim(-2,40)+
+  labs(title= "Ganancia total independientes",x="Ganancia total independientes",y="densidad",caption="$COP En millones mensuales")+
+  xlim(-1,20)+
   theme_minimal()+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
 
-
 gananciaIndep_point <- ggplot(GEIH_2018, aes(y=y_gananciaIndep_m/(1000000),x=age, color="#1da2d8")) +
   geom_point()+
-  labs(title="Ganancia total independientes",y="Ganancia total independientes)",x="Edad", caption="En millones mensuales")+
+  labs(title="Ganancia total independientes",y="Ganancia total independientes)",x="Edad", caption="$COP En millones mensuales")+
   theme_minimal()+
   theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-
 
 y_hist<-plot_grid(impa_hist, isa_hist,salary_hist,ingLab_hist,gananciaIndep_hist,y_total_hist, ncol = 2, nrow = 3)
 y_point<-plot_grid(impa_point, isa_point,salary_point,ingLab_point,gananciaIndep_point,y_total_point, ncol = 2, nrow = 3)
@@ -487,20 +468,21 @@ y_point<-plot_grid(impa_point, isa_point,salary_point,ingLab_point,gananciaIndep
 ggsave("views/y_hist.png", width = 70, height = 50, units="cm",plot = y_hist)
 ggsave("views/y_point.png", width = 70, height = 50, units="cm",plot = y_point)
 
-summary(GEIH_2018$impa)
-summary(GEIH_2018$isa)
-summary(GEIH_2018$y_salary_m)
-summary(GEIH_2018$y_ingLab_m)
-summary(GEIH_2018$y_gananciaIndep_m)
-summary(GEIH_2018$y_total_m)
-  
+
+stargazer(GEIH_2018%>%select(c(impa,isa,y_salary_m,y_ingLab_m,y_gananciaIndep_m,y_total_m,totalHoursWorked)),title = "Estadisticas descriptivas", type = "text", column.labels = c("Variable","Obs","Media","Desv. est.","Min","Max"),
+          covariate.labels=c("Edad","Ingreso de la actividad principal","Ingreso actividad secundaria","Salario actividad principal","Salario laboral","Salario + ingreso independientes","Ganancia total independientes"),
+          out = "views/numericalSummaryStats.txt")
+
 GEIH_2018<- subset(GEIH_2018, filter=-c(regSalud_nan,dummy))
 
-rm(list= ls(pattern = "PG|BG|hist|point"))
-
+rm(list= ls(pattern = "PG|BG|hist|point|plot"))
 
 
 ##### NAN IMPUTING 
+#imputamos la media condicional de la variable en diferentes caracteristicas de la persona, 
+#si es una variable categorica se le pone la categoria mas frecuente dadas las caracteristicas
+# dado que son varias caracteristicas algunos valores no se rellenan en la primera ronda, entonces se relaja la condición en una segunda o tercera ronda hasta que queden todos rellenados
+
 GEIH_2018 = GEIH_2018 %>% 
   group_by(estrato1,sex,age,oficio) %>% 
   mutate(mf_MaxEducLevel = names(which.max(table(maxEducLevel))) )%>%
@@ -510,6 +492,7 @@ GEIH_2018 = GEIH_2018 %>%
   mutate(maxEducLevel = ifelse(test = is.na(maxEducLevel)==T,
                            yes = mf_MaxEducLevel,
                            no = maxEducLevel))
+skim(GEIH_2018$maxEducLevel)#ya estan todos completos 
 
 GEIH_2018 = GEIH_2018 %>% 
   group_by(estrato1,sex,age,maxEducLevel,oficio) %>% 
@@ -529,10 +512,9 @@ GEIH_2018 = GEIH_2018 %>%
                        yes = mf_regSalud,
                        no = regSalud))
 
-summary(GEIH_2018$y_total_m)
-summary(GEIH_2018$impa)
-skim(GEIH_2018$regSalud)
-
+summary(GEIH_2018$y_total_m)#todavía quedan nan
+summary(GEIH_2018$impa)#todavía quedan nan
+skim(GEIH_2018$regSalud)#ya estan todos completos 
 
 GEIH_2018 = GEIH_2018 %>% 
   group_by(estrato1,sex,maxEducLevel,oficio) %>% 
@@ -548,9 +530,9 @@ GEIH_2018 = GEIH_2018 %>%
                        yes = mean_impa,
                        no = impa) )
 
-summary(GEIH_2018$y_total_m)
-summary(GEIH_2018$impa)
-
+summary(GEIH_2018$y_total_m)#todavía quedan nan
+summary(GEIH_2018$impa)#todavía quedan nan
+        
 GEIH_2018 = GEIH_2018 %>% 
   group_by(estrato1,sex,maxEducLevel) %>% 
   mutate(mean_y = mean(y_total_m,na.rm=T),
@@ -565,68 +547,39 @@ GEIH_2018 = GEIH_2018 %>%
                        yes = mean_impa,
                        no = impa) )
 
-summary(GEIH_2018$y_total_m)
-summary(GEIH_2018$impa)
+summary(GEIH_2018$y_total_m)# ya esta completa
+summary(GEIH_2018$impa)## ya esta completa
 GEIH_2018$regSalud <- as.factor(GEIH_2018$regSalud)
 
-
-
-#y_total_m - income salaried + independents total
-y_total_hist_NM <- ggplot(GEIH_2018, aes(x=y_total_m/(1000000))) +
-  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
-  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T)+sd(y_total_m/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T),color="Media"), size=1)+
-  geom_vline(aes(xintercept=mean(y_total_m/(1000000),na.rm = T)-sd(y_total_m/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
-  scale_color_manual(name="", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222","missings"="#ffffff") 
-                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T)-sd(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= -1 sd"),
-                                "Media"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= media"),
-                                "+sd"=paste(as.character(round(mean(GEIH_2018$y_total_m/(1000000),na.rm = T)+sd(GEIH_2018$y_total_m/(1000000),na.rm = T),2)),"= +1 sd"),
-                                "missings"=paste(as.character(sum(is.na(GEIH_2018$y_total_m))),"missings")
-                     ))+
-  labs(title= "Salario + ingreso independientes",x="Salario + ingreso independientes",y="densidad",caption="En millones mensuales")+
-  xlim(-1,40)+
-  theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-y_total_point_NM <- ggplot(GEIH_2018, aes(y=y_total_m/(1000000),x=age, color="#1da2d8")) +
-  geom_point()+
-  labs(title= "Salario + ingreso independientes",y="Salario + ingreso independientes",x="Edad",caption="En millones mensuales")+
-  theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-# impa - principal occ.
-impa_hist_NM <- ggplot(GEIH_2018, aes(x=impa/(1000000))) +
-  geom_histogram(aes(y=..density..),fill = "#28BFE8", color = "white") + 
-  geom_vline(aes(xintercept=mean(impa/(1000000),na.rm = T)+sd(impa/(1000000),na.rm = T),color="-sd"), linetype="dashed", size=1)+
-  geom_vline(aes(xintercept=mean(impa/(1000000),na.rm = T),color="Media"), size=1)+
-  geom_vline(aes(xintercept=mean(impa/(1000000),na.rm = T)-sd(impa/(1000000),na.rm = T),color="+sd"), linetype="dashed", size=1)+
-  scale_color_manual(name= "", values = c("-sd" = "#B22222","Media" = "#5cb85c",  "+sd" = "#B22222","missings"="#ffffff") 
-                     , labels=c("-sd"=paste(as.character(round(mean(GEIH_2018$impa/(1000000),na.rm = T)-sd(GEIH_2018$impa/(1000000),na.rm = T),2)),"= -1 sd"),
-                                "Media"=paste(as.character(round(mean(GEIH_2018$impa/(1000000),na.rm = T),2)),"= media"),
-                                "+sd"=paste(as.character(round(mean(GEIH_2018$impa/(1000000),na.rm = T)+sd(GEIH_2018$impa/(1000000),na.rm = T),2)),"= +1 sd"),
-                                "missings"=paste(as.character(sum(is.na(GEIH_2018$impa))),"missings")
-                     ))+
-  labs(title = "ingreso actividad principal",x="ingreso monetario actividad principal",y="densidad",caption="En millones mensuales")+
-  xlim(-1,40)+
-  theme_minimal()+
-  theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-impa_point_NM <- ggplot(GEIH_2018, aes(y=impa/(1000000),x=age, color="#1da2d8")) +
-  geom_point()+
-  labs(title = "ingreso actividad principal",y="ingreso monetario actividad principal",x="Edad",caption="En millones mensuales")+
-  theme_minimal()+
-  theme(legend.position="none",plot.title = element_text(hjust = 0.5,size=14,face="bold"))
-
-
-y_afterimputing<-plot_grid(y_total_hist_NM, y_total_point_NM,impa_hist_NM,impa_point_NM, ncol = 2, nrow = 2)
-rm(list= ls(pattern = "PG|BG|hist|point"))
+sumstat <- GEIH_2018 %>%
+  select(
+    "Ingreso de la actividad principal" = impa,
+    "Salario +  ganancia independientes" = y_total_m) %>%
+  summarise_each(funs(mean, sd, min, max)) %>%
+  gather(key, value, everything()) %>% 
+  separate(key, into = c("variable", "stat"), sep = "_") %>%
+  spread(stat, value) %>%
+  select(variable, mean, sd, min, max) %>%
+  mutate_each(funs(round(., 1)), -variable)
+sumstat=rename(sumstat,"Statistic"="variable","Mean"="mean","St. Dev."="sd","Min"="min", "Max"="max")
+write.table(sumstat, file = "views/sumstats after nan imputing.txt", sep = ",", quote = FALSE, row.names = F)
 
 GEIH_2018<-subset(GEIH_2018, select = -c(mf_regSalud,regSalud_nan,mean_impa,mean_y,dummy,mf_MaxEducLevel ))
 skim=skim(GEIH_2018)
+sumstat_maxEducLevel<-as.data.frame(prop.table(table(GEIH_2018$maxEducLevel)))%>%
+  mutate(maxEducLevel= case_when(Var1==1~"Ninguno",Var1==2~"Primaria incompelta",Var1==3~"Primaria completa",Var1==4~"Secundaria incompleta",Var1==5~"Secundaria completa",Var1==6~"Superior o universitaria"),
+         Freq=round(Freq,2))
 
+sumstat_regSalud<-as.data.frame(prop.table(table(GEIH_2018$regSalud)))%>%
+  mutate(regSalud=case_when(Var1==1~"r. contributivo",Var1==2~"r. especial",Var1==3~"r. subsidiado"), Freq=round(Freq,2))
+
+sumstat_factors <- as.data.frame(cbind(sumstat_maxEducLevel$maxEducLevel,sumstat_maxEducLevel$Freq,sumstat_regSalud$regSalud,sumstat_regSalud$Freq))
+sumstat_factors<- rename(sumstat_factors, "maxEducLevel"="V1","maxEducLevel %"="V2","regSalud"="V3","regSalud %"="V4")
+sumstat_factors[4:6,3:4]<-NaN
+
+write.table(sumstat_factors, file = "views/sumstats factors after nan imputing.txt", sep = ",", quote = FALSE, row.names = F)
+
+rm(list=c("sumstat_factors","sumstat_regSalud","sumstat_maxEducLevel","sumstat"))
 
 # quitamos todas las otras variables de ingreso que no nos interesan 
 ing_vars = list(subset(skim, select =skim_variable))
@@ -643,28 +596,20 @@ GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018$age2<-GEIH_2018$age^2
 GEIH_2018<-GEIH_2018%>%
   mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
-summary(GEIH_2018$ln_y)
-source("http://pcwww.liv.ac.uk/~william/R/crosstab.r")
-crosstab(GEIH_2018,row.vars = "Mujer",col.vars = "sex")
 
+## guardamos la base de datos limpia 
+write.csv(GEIH_2018,file = "stores/GEIH_2018_clean.csv",fileEncoding = "UTF-8")
 
 
 
       ######### 2. Age-earnings profile ##########
-
-#Nos quedamos con y_total_m y la estandarizamos
-GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
-
-GEIH_2018$age2<-GEIH_2018$age^2
-
-
 
  ### Modelo 1.0 (ln_y~age+age2)
 Model1.m <- subset(GEIH_2018, select = c(y_total_m,ln_y,age,age2) )
 model1<-lm(ln_y~age+age2,Model1.m)
 
 #tabla
-stargazer(model1,title="", out=file.path(getwd(),"/views/model1.txt"),out.header = T)
+stargazer(model1,title="Perfil de ingreso - Edad", out=file.path(getwd(),"/views/model1.txt"),out.header = T, type = "text")
 summary(model1)
 ##Intervalos 
 #Guardar betas 
@@ -692,9 +637,8 @@ res.m1<-function(data,index){
 
 
 boot_beta_m1<- boot (Model1.m, beta.m1,R=1000)
-summary (boot_beta)
 boot_res_m1<- boot (Model1.m, res.m1,R=1000)
-summary (boot_res)
+
 
 b0_lwr <-boot.ci(boot_beta_m1,type = "basic",index = 1)[[4]][[4]]
 b0_upr <-boot.ci(boot_beta_m1,type = "basic",index = 1)[[4]][[5]]
@@ -720,13 +664,9 @@ age_earningsProfile_m1 <- ggplot(Model1.m, aes(x = age, y = ln_y) ) +
   geom_line(aes(y = y_fitted_lwr,colour = "lightblue"),color="lightblue", size = 1)+
   geom_line(aes(y = y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
   geom_ribbon( aes(ymin = y_fitted_lwr, ymax = y_fitted_upr), fill = "lightblue", alpha = .4)+
-  geom_ribbon( aes(ymin = y_f_lw, ymax = y_f_up), fill = "red", alpha = .4)+
-  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
-  scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
-                     , labels=c("ci"="ci",
-                                "y_hat"="y_hat"
-                     ))+
+  labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="logaritmo del ingreso")+
   theme_light()+
+  ylim(0,40)+
   theme(plot.title = element_text(hjust = 0.5,size=14,face="bold"))
   
 ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",plot = age_earningsProfile_m1)
@@ -742,10 +682,11 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 Model2.m <- subset(GEIH_2018, select = c(ln_y,Mujer) )
 model2<-lm(ln_y~Mujer,Model2.m)
 
-stargazer(model2,title="", out=file.path(getwd(),"/views/model2.txt"),out.header = T)
+stargazer(model2,title="", out=file.path(getwd(),"/views/model2.txt"),out.header = T,type="text")
 summary(model2)
 
 #MODELO 2.1 (ln_y~sex+age+age2)
+####### OJO TODAVIA NO ESTA  ######
 Model2.1.m <- subset(GEIH_2018, select = c(ln_y,Mujer,age,age2) )
 model2.1<-lm(ln_y~age+age2+Mujer,Model2.1.m)
 summary(model2.1)
@@ -804,7 +745,7 @@ Model2.1.m$ln_y_fitted_upr <- (b0_upr + b1_upr*Model2.1.m$age + b2_upr*Model2.1.
   geom_line(aes(y = ln_y_fitted_H), size = 1)
   geom_line(aes(y = Model2.1.m$ln_y_fitted_lwr ,colour = "lightblue"),color="lightblue", size = 1)+
   geom_line(aes(y = Model2.1.m$ln_y_fitted_upr,colour = "lightblue"),color="lightblue", size = 1)+
-  geom_ribbon( aes(ymin = Model2.1.m$ln_y_fitted_lwr, ymax = Model2.1.m$ln_y_fitted_upr, fill = "lightblue", alpha = .4)+
+  geom_ribbon( aes(ymin = Model2.1.m$ln_y_fitted_lwr, ymax = Model2.1.m$ln_y_fitted_upr, fill = "lightblue", alpha = .4))+
   geom_ribbon( aes(ymin = ln_y_f_lw, ymax = ln_y_f_up), fill = "red", alpha = .4)+
   labs(title = "Age earnings profile",y="Salario + ingreso independientes",x="Edad",caption="ingreso estandarizado")+
   scale_color_manual(name= "", values = c("ci" = "lightblue","y_hat" = "#5cb85c") 
@@ -819,7 +760,7 @@ ggsave("views/age_earningsProfile_m1.png", width = 70, height = 50, units="cm",p
 
 
 ##MODELO CON CONTROLES 
-edad_educacion<-(GEIH_2018$n_edu* GEIH_2018$age)
+edad_educacion<-(GEIH_2018$maxEducLevel* GEIH_2018$age)
 edad_sexo<-(GEIH_2018$age*GEIH_2018$sexo)
 edad_estrato<-(GEIH_2018$age*GEIH_2018$estrato)
 
@@ -997,6 +938,9 @@ model1<-train(ln_y~age+age2+sex+estrato1+maxEducLevel,
 
 model2<-train(ln_y~+age+age2+sex_age+sex_ed+regSalud,
                      data=GEIH_2018, trControl=trainControl(method="cv",number=nrow(GEIH_2018)))
+
+ctrl <- trainControl(method = "LOOCV")
+model2 <- train(ln_y~+age+age2+sex_age+sex_ed+regSalud, data = GEIH_2018, method = "lm", trControl = ctrl)
 
 
 
