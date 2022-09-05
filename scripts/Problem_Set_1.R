@@ -809,8 +809,6 @@ summary (bootcor)
 
 
 ######### 4. predicts earnings ##########
-
-#4.1
 # nuevas variables 
 GEIH_2018$lneduc<-log(as.numeric(GEIH_2018$maxEducLevel))
 GEIH_2018$sex_age<-as.numeric(GEIH_2018$sex)*GEIH_2018$age
@@ -820,6 +818,7 @@ GEIH_2018$sizefirm<-as.numeric(GEIH_2018$sizeFirm)
 GEIH_2018$propiasizefirm<-as.numeric(GEIH_2018$cuentaPropia)*GEIH_2018$sizefirm
 GEIH_2018$relab_formal<-as.numeric(GEIH_2018$relab)*as.numeric(GEIH_2018$formal)
 
+#4.1
 #Partir la muestra
 set.seed(10101)
 GEIH_2018 <- GEIH_2018 %>%
@@ -840,7 +839,7 @@ mod_46<-lm(ln_y~+age+age2+sex+totalHoursWorked + totalHoursWorked^2+ relab+forma
 
 
 #Resultados
-tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text")# revisar como guardar solo el y_hat, y los errores 
+tab_4<-stargazer(mod_41,mod_42,mod_43,mod_44,mod_45,type="text",out = "views/modelos en muestra p4.text")# revisar como guardar solo el y_hat, y los errores 
 
 #Poder predictivo
 mod_41<-lm(ln_y~sex-1,data=train)
@@ -888,14 +887,14 @@ mse_48<-summary(test$se_48)[4]
 #mse_49<-summary(test$se_49)[4]
 #test$se_49<-(test$ln_y-test$mod_49)^2
 
-table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48)#, mse_49)
+mse<-table(mse_41, mse_42, mse_43, mse_44, mse_45, mse_46, mse_47, mse_48)#, mse_49)
+write.table(mse, file = "views/mse.txt", sep = ",", quote = FALSE, row.names = F)
 
 saveRDS(GEIH_2018,file=paste0(getwd(),"/GEIH_2018_4.rds"))
 
-GEIH_2018<-readRDS(file =paste0(getwd(),"/GEIH_2018_4.rds"))
+#GEIH_2018<-readRDS(file =paste0(getwd(),"/GEIH_2018_4.rds"))
 
 ## 4.3. influence statistic
-
 mod_41<-lm(ln_y~sex-1,data=test)
 mod_42<-lm(ln_y~age+age2,data=test)
 mod_43<-lm(ln_y~age+age2+sex,data=test)
@@ -905,14 +904,14 @@ mod_46<-lm(ln_y~age+age2+sex_age+lneduc,data=test)
 mod_47<-lm(ln_y~age+age2+sex_age+sex_ed+regSalud,data=test)
 mod_48<-lm(ln_y~age+age2+sex+totalHoursWorked + hwork2,data=test)
 
-dfb_41=dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE))
-dfb_42=dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE))
-dfb_43=dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE))
-dfb_44=dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE))
-dfb_45=dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE))
-dfb_46=dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE))
-dfb_47=dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE))
-dfb_48=dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE))
+#dfb_41=dfbeta(mod_41, infl = lm.influence(mod_41, do.coef = TRUE))
+#dfb_42=dfbeta(mod_42, infl = lm.influence(mod_42, do.coef = TRUE))
+#dfb_43=dfbeta(mod_43, infl = lm.influence(mod_43, do.coef = TRUE))
+#dfb_44=dfbeta(mod_44, infl = lm.influence(mod_44, do.coef = TRUE))
+#dfb_45=dfbeta(mod_45, infl = lm.influence(mod_45, do.coef = TRUE))
+#dfb_46=dfbeta(mod_46, infl = lm.influence(mod_46, do.coef = TRUE))
+#dfb_47=dfbeta(mod_47, infl = lm.influence(mod_47, do.coef = TRUE))
+#dfb_48=dfbeta(mod_48, infl = lm.influence(mod_48, do.coef = TRUE))
 
 dffits_41= as.data.frame(dffits(mod_41))
 dffits_42= as.data.frame(dffits(mod_42))
@@ -925,21 +924,20 @@ dffits_48= as.data.frame(dffits(mod_48))
 dffits=cbind(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
 rm(dffits_41,dffits_42,dffits_43,dffits_44,dffits_45,dffits_46,dffits_47,dffits_48)
 
+hist(dffits$`dffits(mod_41)`)
+hist(dffits$`dffits(mod_42)`)
+hist(dffits$`dffits(mod_43)`)
+hist(dffits$`dffits(mod_44)`)
+hist(dffits$`dffits(mod_45)`)
+hist(dffits$`dffits(mod_46)`)
+hist(dffits$`dffits(mod_47)`)
+hist(dffits$`dffits(mod_48)`)
 
 ##4.4 Validacion cruzada
 # Se usan los modelos 5 y 7 porque son los que tienen menor error 
 
-
-
-model1<-train(ln_y~age+age2+sex+estrato1+maxEducLevel,
-              data=GEIH_2018, trControl=trainControl(method="cv",number=nrow(GEIH_2018)))
-
-
-
-model2<-train(ln_y~+age+age2+sex_age+sex_ed+regSalud,
-                     data=GEIH_2018, trControl=trainControl(method="cv",number=nrow(GEIH_2018)))
-
 ctrl <- trainControl(method = "LOOCV")
+model1 <- train(ln_y~age+age2+sex+estrato1+maxEducLevel, data = GEIH_2018, method = "lm", trControl = ctrl)
 model2 <- train(ln_y~+age+age2+sex_age+sex_ed+regSalud, data = GEIH_2018, method = "lm", trControl = ctrl)
 
 
