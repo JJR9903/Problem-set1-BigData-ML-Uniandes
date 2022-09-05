@@ -592,8 +592,8 @@ GEIH_2018$ln_y<-log(GEIH_2018$y_total_m)
 GEIH_2018$age2<-GEIH_2018$age^2
 GEIH_2018<-GEIH_2018%>%
   mutate(Mujer=ifelse(test=sex==0,yes=1,no=0))
-estrato<-destring(estrato1)
-educacion<-destring(maxEducLevel)
+estrato<-as.numeric(GEIH_2018$estrato1)
+educacion<-as.numeric(GEIH_2018$maxEducLevel)
 ## guardamos la base de datos limpia 
 write.csv(GEIH_2018,file = "stores/GEIH_2018_clean.csv",fileEncoding = "UTF-8")
 
